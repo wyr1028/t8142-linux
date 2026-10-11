@@ -29,12 +29,14 @@ at this time**"*(比 WIP 还低一档)。Installer = **no**。
 真机工作      ❌ 一步没动 —— 卡在"游戏本还没装 Linux"
 ```
 
-**三个好消息:**
+**四个好消息:**
 
 1. **有人在同一台机器(J704)上把 M1 走通了** —— `ImAtomiskk/asahim5`,
    进度到"**启动 Linux 约 80-90%**",完整流程和踩坑都公开了
-2. **原始 ADT 已经在手** —— 不用等 tethered boot
+2. **⭐ 原始 ADT 已经从本机 macOS 里提取出来** —— **不用 m1n1、不用等硬件**
+   (`tools/extract_adt.py`,571 节点,地址 11/11 全中)
 3. **地址规则已解且交叉验证** —— 121 条对账一致
+4. **官方文档全套拿到** —— 流程、端口、依赖、kernel config 位置都有
 
 ---
 
@@ -94,6 +96,7 @@ at this time**"*(比 WIP 还低一档)。Installer = **no**。
 | `pmgr_join.py` | M4 结构 + M5 数值 → pmgr dtsi |
 | `scrub_adt.py` | 洗敏感字段 + 发布前自查 |
 | **`check_host.sh`** | **在 Linux 主机上跑的自检** |
+| **`extract_adt.py`** | **从本机 macOS 提取 ADT**(Preboot 卷的 im4p → DER → LZFSE)** |
 
 **文档**(`docs/`,13 份)。按"现在最该看"排序:
 

@@ -84,11 +84,16 @@ m1n1 启动时会打印**真实地址表**。**这是所有后续工作的地基
 
 **判据**:`p.read32(<UART基址>)` 返回非零。
 
-### 2c 原始 ADT
+### 2c ⭐ 原始 ADT —— **已完成**(不用 m1n1)
 
-- [x] **已经拿到了**(ImAtomiskk 公开的 `m5_adt.txt`)
-- [ ] 用 m1n1 自带的 `proxyclient/adt.py` 自己 dump 一份对账
-- [ ] 记录来源
+- [x] **从本机 macOS 提取**:`tools/extract_adt.py`(Preboot 卷里的 `DeviceTree.j704ap.im4p`)
+- [x] 用 m1n1 自带的 `python -m m1n1.adt` 解码 → **24,668 行 / 571 节点**
+- [x] **地址核对 11/11 全中**
+- [x] 安全性核对:序列号/UUID/MAC **0 次出现**(工具渲染成引用符号)
+- 详见 [docs/EXTRACT-ADT.md](docs/EXTRACT-ADT.md)
+
+> ⚠️ 这份是 **iBoot 之前**的版本(官方文档:missing details filled in by iBoot)。
+> 要 100% 完整的仍需 m1n1 dump —— 但对写设备树已经够用。
 
 ---
 
@@ -146,7 +151,7 @@ m1n1 启动时会打印**真实地址表**。**这是所有后续工作的地基
 M0  Ubuntu + IPSW + 关 FileVault        ← 现在
 M1  复现 m1n1 proxy(别人已通)          ← 照手册走
 M2  抓启动日志 + 修 proxy 基址           ← ⭐ 从这开始是新东西
-M3  原始 ADT(已有)                     ← 对账
+M3  ✅ 原始 ADT 已完成(从本机 macOS 提取)
 M4  设备树(用 m1n1 自带工具)
 M5  内核启动 + WFI workaround           ← ⭐ 真正的墙
 M6  串口出字
