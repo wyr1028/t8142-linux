@@ -64,6 +64,16 @@ else
 fi
 
 echo
+echo "═══ Python 包(tethered boot 的 proxyclient 要用)═══"
+chk "pyserial(import serial)" \
+    "python3 -c 'import serial'" \
+    "pip3 install --user pyserial construct serial.tool"
+chk "construct(import construct)" \
+    "python3 -c 'import construct'" \
+    "pip3 install --user pyserial construct serial.tool"
+printf "     ${Y}注${N}: Ubuntu 24.04 起 pip3 --user 会被 PEP 668 拦,用 venv 或加 --break-system-packages\n"
+
+echo
 echo "═══ Rust(m1n1 有 Rust 部分,别漏)═══"
 chk "rustup" "command -v rustup" \
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
