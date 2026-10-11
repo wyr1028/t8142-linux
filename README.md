@@ -108,6 +108,7 @@ docs/
   IOREG-CAVEATS.md   ⚠️ ioreg 视图的三条陷阱(合成/展开/固件版本差异)
   EXTRACT-ADT.md     ⭐ 从本机 macOS 提取 ADT —— **不用 m1n1**
   HOW-TO-UNDO.md     ⚠️ 装了 m1n1 之后怎么回 macOS + NOR Flash 红线
+  PROXY-ZEROS.md     "proxy 读出全是 0" 的误诊分析 + 窗口假设
 tools/
   adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点
