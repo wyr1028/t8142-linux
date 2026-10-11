@@ -219,3 +219,91 @@ bus 0x0 → phys 0x2_1000_0000   size 0x3_F000_0000     Δ = 0x2_1000_0000
 
 新增 `tools/adt_txt.py` —— 解析原始 ADT 的文本 dump(Apple 二进制格式我们读不了,
 但文本形式可以)。支持 `--ranges`(看翻译窗口)、`--list`(列节点+物理地址)、`--tree`。
+
+---
+
+## 8 现成补丁与工具清单(2026-10-11 二次调查)
+
+把三个项目的**成品**逐个看过。结论:大部分我们能用的东西**上游已经有了**,
+真正新的只有一处。
+
+### 8.1 `antiapplefox/m5-linux` —— SPTM 逆向(最深的项目)
+
+| 产物 | 内容 |
+|---|---|
+| `m1n1-patches/0001~0003` | 加 M4 Pro/Max 和 M5 的 chip ID / MIDR / chickens —— **上游已合并(#629/#578),冗余** |
+| `m1n1-patches/0004-sptm-add-xnu-shim-boot-handoff.patch` | **SPTM 的 XNU shim 桩** —— 新的 |
+| `linux-sptm/arch/arm64/mm/sptm.c` | Linux 侧的 SPTM 脚手架,~150 行(目标 ~1500–3000 行) |
+| `docs/sptm-research.md` | **52 KB 的完整逆向报告** |
+| `docs/linux-mmu-port-scope.md` | 22 KB 的移植范围评估 |
+| `docs/bootkc-packaging.md` | 怎么把 m1n1 打包成 SPTM 认识的 Boot Kernel Collection |
+| `analysis/sptm/*.csv` | 148 个 `(subsys, idx)` 调用号的解码表 |
+
+**关键结论(他们的原话)**
+
+> - SPTM 在 GL2,高于 EL2 —— 高于 OS、高于任何 hypervisor
+> - **没有非 XNU 的 supervisor domain** —— `EXEC_MODE_*` 只有
+>   `SPTM_DEFAULT` / `TXM_DEFAULT` / `XNU_DEFAULT`。
+>   **Linux 必须伪装成 XNU。**
+> - iBoot 的 SPTM 初始化**要求内核镜像是形状正确的 BootKC**,否则 panic
+> - 各 SoC 拿到 SPTM 的时间:M2 = macOS 15.0,M4 = 出生自带(15.2),
+>   **M3 = macOS 26.0**;**M1 (`t8103`) 从来没有**
+
+**状态警示**:他们自己写明 ——
+> Patches `0001–0004` apply cleanly and `m1n1.macho` builds, but:
+> **runtime-correctness is per static analysis, unverified on hardware**,
+> and contingent on m1n1 being packaged as an SPTM-aware BootKC (**not done**).
+> **No working shim. No working Linux MMU port.**
+
+**对我们的意义**:这是**内核引导阶段(阶段 4)的路线图**。
+ImAtomiskk 在没有它的情况下就把 m1n1 跑起来了,所以 **M1/M2 不需要它**。
+
+### 8.2 `sentaxic/asahi-m5`
+
+| 产物 | 内容 | 可用性 |
+|---|---|---|
+| `patches/0001-m1n1-t8142-m5-soc-support.patch` | 加 T8142 到 `soc.h`/`smp.c` | ⚠️ **冗余 —— 上游已有** |
+| `dts/t8142.dtsi`(5836 B) | 最小设备树 | ⚠️ pre-boot,未验证 |
+| `tools/extract_addrs.py` | 从 ioreg dump 提地址表 | ✅ 思路和我们一致 |
+
+### 8.3 ⭐ 唯一真正新的发现:上游 `soc.h` 有个错值
+
+```
+上游 m1n1 现状:
+  #elif TARGET == T8140 || TARGET == T8142
+  #define EARLY_UART_BASE 0x385200000     ← T8140(A18 Pro)的值
+
+sentaxic 的补丁:
+  #elif TARGET == T8142
+  #define EARLY_UART_BASE 0x3a5200000     ← 和我们的 ADT 一致
+```
+
+**核实**:在 J704 的原始 ADT 里搜 `0x385200000` —— **0 命中**。
+M5 上只有两个 UART:`uart0 @ 0x3a5200000`、`dockchannel-uart @ 0x388128000`。
+
+**结论:上游给 T8142 的 `EARLY_UART_BASE` 指向一个不存在的地址。**
+
+**影响:低。** 正常构建从 ADT 读地址;只有 `TARGET=T8142` 的"早期调试版"才用这个值。
+而 ImAtomiskk 走 USB proxy,根本不经 UART —— 所以没人踩到。
+
+**要用的时候**:本地构建时把那一行改成 `0x3a5200000`(见 sentaxic 的补丁写法)。
+
+### 8.4 `ImAtomiskk/asahim5`
+
+- **m1n1 是 git submodule,指向上游 `AsahiLinux/m1n1`** ——
+  **说明上游 m1n1 原样就能在 J704 上跑**,不需要任何补丁
+- `dump/` 三份文件(原始 ADT 的 bin / txt / 生成好的 dts)—— **已拿到**
+- `notes/` 八份文档 —— **已全部读进 [M1-RUNBOOK](M1-RUNBOOK.md)**
+
+### 8.5 汇总:**我们还需要自己做什么**
+
+| 环节 | 现成的 | 我们要做的 |
+|---|---|---|
+| 编译/安装 m1n1 | ✅ ImAtomiskk 的完整流程 | 照做 |
+| m1n1 支持 T8142 | ✅ 上游已合并 | 无 |
+| 抓启动日志 | ✅ 方法已知 | 照做 |
+| **修 proxy 基址** | ❌ **没人做成** | ⭐ **从这开始** |
+| 原始 ADT | ✅ 已有 | 对账 |
+| ADT→DTS | ✅ m1n1 自带 `pmgr_adt2dt.py` | 用它 |
+| 内核引导 | ⚠️ 别人"80-90%" | ⭐ **真正的墙** |
+| SPTM shim | ⚠️ 有桩,未验证 | 阶段 4 再看 |
