@@ -442,3 +442,55 @@ Container: flags = Container: b7=False b6=False perf=False no_ps=False
 
 ioreg 解出 **387** 条,原始 ADT 的文本解出 **386** 条。差 1。
 大概率是我的文本切分丢了一条,**待核**。
+
+---
+
+## 11 ⭐ 二次调研(2026-10-11 晚):一条重要遗漏 + 两处进展
+
+§1~§10 之后又查了一轮。**有一条遗漏(比我们记的所有项目都靠前),两处卡点在动。**
+
+### 11.1 🔴 遗漏:忘了记 M5 **Pro** 上的 —— `Sowyu/m5-azahi`
+
+| | |
+|---|---|
+| 机器 | **M5 Pro** / T6050 / J714s / `Mac17,9` ← **不是我们这代 SoC** |
+| 进度 | ⭐ **原生 Fedora KDE,从 Btrfs SSD root 冷启动到桌面**(v7 已验证) |
+| 已验证 | 完整 `3024×1964` 显示 + 持久化 175% 缩放;键盘可用;触控板部分启动可用;SSH/tunnel |
+| 卡点 | **只有一个核**;软件渲染(无 GPU);**Wi-Fi 不通**;USB 网络当前失效;关机停在 `poweroff.target`(缺 `apple,smc-reboot` 节点) |
+| 定位 | 个人项目、**AI 辅助**(README 主动声明并承认 Asahi 的 LLM 政策);明确**不供日常使用** |
+
+**对我们的意义**:这是公开项目里**走得最远的一个** —— 已经在"从 SSD 原生启动到桌面"这层了,
+而 base M5(J704)还卡在"内核启动/副核"。
+⚠️ **SoC 不同(T6050 vs T8142),不能直接搬**,但它证明了**这条路能走到哪**。
+可参考的单核 loader / `dockchannel-hid` / ANS-SART NVMe / SSD-root 打包 —— **属阶段 6 之后,现在用不上**。
+
+### 11.2 进展:我们记的"卡点"有两个在动
+
+| 卡点 | 本文档原记录 | 现在(2026-10-11) |
+|---|---|---|
+| **WFI chicken bit** | "有解" | ✅ **已进主线 linux-next**。解法 = 内核参数 `idle=nop`(+`arm64.nowfxt`);m1n1 的 `kboot` 检测到受影响裸机时**自动补参数**(PR **#672 已合并 2026-09-29**);**已在 M5 上确认有效** |
+| **PSCI 缺失** | "Asahi 在推" | 🔶 **有 RFC 了**:Sven Peter 做**基于 UEFI Runtime Services 的 PSCI conduit**(m1n1 保留自身内存并留一个 PSCI 实现),内核侧补丁已在 ML 上作为 RFC |
+| **SPTM / GXF** | §8.1 记了 antiapplefox 的桩 | 🔶 m1n1 已能**模拟 SPRR/GXF,把 XNU 当 guest 跑**;但仍**没有可用的 XNU shim**、没有可用的 Linux MMU port |
+| **proxyclient MMIO 基址** | "没人做成" | ❌ **仍无人做成** —— 还是我们的机会点 |
+
+### 11.3 m1n1 版本与 PR(全部核实过)
+
+| | 状态 |
+|---|---|
+| `v1.6.1`(2026-08-08) | release note 明列 **"Initial support for T8142"** |
+| `v1.9.9`(2026-10-02) | 加大量 M4 支持(NVMe、Apple USB type-C、内存/缓存控制器),**并开始 M6 支持** |
+| PR **#629** `Initial support for T8142` | ✅ 合并 2026-07-19 |
+| PR **#578** pmgr M4 Pro/Max + A18 Pro + M5 | ✅ 合并 2026-05-15 |
+| PR **#672** `kboot: disable wfi/wfit if wfi loses state` | ✅ 合并 2026-09-29 |
+
+### 11.4 其它(待评估,暂不入表)
+
+- `jmkq0056/linuxonmac` —— **不是原生**:用 Apple 公开的 Virtualization.framework 把 Debian 13 做成"像第二个原生系统"的 VM。若原生长期不可行,是可用的 fallback 模板
+- `rhelvista/M5-logs` —— 仓库存在但**内容为空**(只有 LICENSE)
+- Reddit 上**没有** M5 原生启动的专门帖子;讨论集中在 Lemmy/feddit/Mastodon 与各项目仓库
+
+### 11.5 来源分级
+
+- **一手**:`asahilinux.org` 的 M5/M4 特性页、Linux 7.2 进度报告、LLM 政策;m1n1 的 PR #629/#578/#672 与 releases;`yuka.dev` 的《The Forgetful CPU (Linux on M4)》;各项目仓库本身
+- **二手**:Phoronix 等聚合站。个别措辞夸大(如"Asahi 已在 M5 上运行"),以官方特性页与进度报告为准
+- ⚠️ **灰区(如实标注)**:`antiapplefox/m5-linux` 与 `Sowyu/m5-azahi` 会从**公开可下载的 macOS IPSW** 里提取未加密的 iBoot/SPTM 二进制做静态分析 —— 那是 Apple 公开发布的固件,**不是泄漏物**,但接近 clean-room 边界。本次调研**未下载、未阅读**这些二进制
