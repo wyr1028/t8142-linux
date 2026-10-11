@@ -1,0 +1,38 @@
+# 构建产物
+build/
+out/
+*.o
+*.elf
+*.bin
+*.img
+*.dtb
+*.dtbo
+
+# 上游源码树(不纳入版本控制,按需拉取)
+m1n1/
+linux/
+u-boot/
+
+# 原始硬件数据 —— ⚠️ 含序列号/UUID/MAC,绝不提交
+*-adt.plist
+*.plist
+serial.txt
+dumps/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# 凭据 —— 绝不提交
+.env
+*.pem
+*.key
+id_*
