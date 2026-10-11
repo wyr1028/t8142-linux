@@ -80,7 +80,9 @@
   - 详见 [docs/PMGR-DEVICES.md](docs/PMGR-DEVICES.md)
   - **遗留**:① 字段语义需真机验证 ② 与 M4 的 129 条对照
     —— 后者要读上游另一个仓库,**先明确要不要读**([LEGAL.md](LEGAL.md) 黄线)
-- [ ] M4 → M5 节点对照表生成器
+- [x] M4 → M5 的 PMGR 对照 + 合成草稿(`tools/pmgr_join.py`)—— 2026-10-11
+- [x] 数据清洗工具(`tools/scrub_adt.py`,含 `--verify` 发布前自查)—— 2026-10-11
+- [ ] M4 → M5 其它块的节点对照(非 PMGR)
 
 ---
 

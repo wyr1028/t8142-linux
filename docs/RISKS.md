@@ -97,7 +97,18 @@ Apple Silicon 的恢复能力强。**真正意义上的"变砖"(连 DFU 都救�
 
 > ⚠️ `.gitignore` 只挡得住 `git add -A`,**挡不住手动 `git add -f`**。
 
-**缓解**:外发前用脚本洗。已洗过的版本是 `~/m5-adt-topology.txt`。
+**缓解**:外发前**必须**过一遍 `tools/scrub_adt.py`,不靠记性:
+
+```bash
+# 生成只含结构的安全版本(默认只留 name / compatible / device_type / reg)
+python3 tools/scrub_adt.py ~/m5-adt.plist -o ~/m5-adt-topology.txt
+
+# 发布前自查 —— 有敏感字段则退出码 1
+python3 tools/scrub_adt.py --verify <要外发的文件>
+```
+
+实测:原始 dump 里有 **87 处**敏感字段(2026-10-11)。白名单式输出比黑名单可靠 ——
+想不到的敏感键不会被漏掉,因为它们本来就不在白名单里。
 
 ---
 

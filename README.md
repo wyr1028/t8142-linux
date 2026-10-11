@@ -59,12 +59,14 @@ tools/
   adt_report.py      硬件清单生成(markdown)
   pmgr_devices.py    PMGR `devices` 属性解码(387 条电源域)
   pmgr_join.py       M4 结构 + M5 数值 → t8142-pmgr.dtsi 草稿
+  scrub_adt.py       洗敏感字段 + 发布前自查(--verify)
 dts/
   t8142-pmgr.dtsi    生成的草稿(255 条;dtc 编译通过)
 tests/
   test_adtlib.py     自测 + dtc 交叉验证(FDT 路径的唯一覆盖)
   test_pmgr_devices.py  PMGR 结构自测
   test_pmgr_join.py     断言生成的 dtsi 无重复节点地址
+  test_scrub_adt.py     洗敏感字段 + 自查误报(两个踩过的坑)
 dts/                 t8142*.dts* / t8142-j704.dts
 ```
 

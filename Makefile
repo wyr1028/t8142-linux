@@ -11,6 +11,7 @@ test:
 	$(PY) tests/test_adtlib.py
 	$(PY) tests/test_pmgr_devices.py
 	$(PY) tests/test_pmgr_join.py
+	$(PY) tests/test_scrub_adt.py
 
 check: test
 	@$(PY) -m py_compile tools/*.py tests/*.py && echo "语法 OK"
