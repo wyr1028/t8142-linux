@@ -1,0 +1,437 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Apple T8142 "M5" SoC — 草稿
+ *
+ * 由 t8132.dtsi(M4)改造而来。本项目与上游无关,见 docs/LEGAL.md。
+ *
+ * ═══ 数据来源 ═══
+ *   结构  : 上游 AsahiLinux/linux 的 t8132.dtsi(公开 GPL,读取已获授权)
+ *   地址  : 本机 ADT 的 reg 属性(ioreg dump)
+ *   中断  : 本机 ADT 的 interrupts 属性
+ *   电源域: dts/t8142-pmgr.dtsi(本项目生成)
+ *
+ * ═══ 关键换算(两处,见 docs/DTS-BACKLOG.md §3)═══
+ *   ① ADT 的 reg 是 (lo, hi, size_lo, size_hi),DT 要 (hi, lo, size_hi, size_lo)
+ *      M5 的外设空间:高 32 位恒为 0x1,即基址 0x1_00000000
+ *   ② ADT 的 interrupts 属性里那个 u32 **就是** AIC 中断号,直接抄
+ *
+ * ⚠️ 本文件是**草稿**,不能直接拿去 boot。未定项都标了 TODO。
+ */
+
+#include <dt-bindings/interrupt-controller/apple-aic.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pinctrl/apple.h>
+
+/ {
+	compatible = "apple,t8142", "apple,arm-platform";
+
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	cpus {
+		#address-cells = <2>;
+		#size-cells = <0>;
+
+		cpu-map {
+			cluster0 {
+				core0 { cpu = <&cpu_e0>; };
+				core1 { cpu = <&cpu_e1>; };
+				core2 { cpu = <&cpu_e2>; };
+				core3 { cpu = <&cpu_e3>; };
+				core4 { cpu = <&cpu_e4>; };
+				core5 { cpu = <&cpu_e5>; };
+			};
+			cluster1 {
+				core0 { cpu = <&cpu_p0>; };
+				core1 { cpu = <&cpu_p1>; };
+				core2 { cpu = <&cpu_p2>; };
+				core3 { cpu = <&cpu_p3>; };
+			};
+		};
+
+		/*
+		 * TODO(§3.2):下面 4 行 compatible 是**未定项**。
+		 *
+		 * 三个来源打架:
+		 *   本机 ADT         -> "apple,sawtooth" / "apple,everest"(M3 的名字)
+		 *   m1n1 读真 MIDR   -> "M5 Hidra"(part 0x62/0x63)
+		 *   M4 的 Linux DTS  -> "apple,donan-e" / "apple,donan-p"
+		 *
+		 * 内核靠这个字符串绑驱动,写错了核就跑不起来。
+		 * **只能在真机上读 MIDR 定性。** 先按 ADT 的写,真机验证后再定。
+		 */
+		cpu_e0: cpu@0 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x0>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+		cpu_e1: cpu@1 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x1>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+		cpu_e2: cpu@2 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x2>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+		cpu_e3: cpu@3 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x3>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+		cpu_e4: cpu@4 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x4>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+		cpu_e5: cpu@5 {
+			compatible = "apple,sawtooth";       /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x5>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_0>;
+		};
+
+		/*
+		 * P 核地址:ADT 里 reg = 0x100,0x101,0x102,0x103。
+		 * ⚠️ M4 的 DT 用的是 0x10100 起 —— **两个世代的 cpu-id 编码不同**。
+		 * 这里用 M5 的值。真机上要确认内核认不认。
+		 */
+		cpu_p0: cpu@100 {
+			compatible = "apple,everest";        /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x100>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_1>;
+		};
+		cpu_p1: cpu@101 {
+			compatible = "apple,everest";        /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x101>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_1>;
+		};
+		cpu_p2: cpu@102 {
+			compatible = "apple,everest";        /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x102>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_1>;
+		};
+		cpu_p3: cpu@103 {
+			compatible = "apple,everest";        /* TODO §3.2 */
+			device_type = "cpu";
+			reg = <0x0 0x103>;
+			enable-method = "spin-table";
+			cpu-release-addr = <0 0>;
+			next-level-cache = <&l2_cache_1>;
+		};
+
+		/* TODO:L2 大小照抄 M4,需从 ADT 或真机确认 */
+		l2_cache_0: l2-cache-0 {
+			compatible = "cache";
+			cache-level = <2>;
+			cache-unified;
+			cache-size = <0x400000>;
+		};
+		l2_cache_1: l2-cache-1 {
+			compatible = "cache";
+			cache-level = <2>;
+			cache-unified;
+			cache-size = <0x1000000>;
+		};
+	};
+
+	timer {
+		compatible = "arm,armv8-timer";
+		interrupt-parent = <&aic>;
+		interrupt-names = "phys", "virt", "hyp-phys", "hyp-virt";
+		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
+		             <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>,
+		             <AIC_FIQ AIC_TMR_HV_PHYS IRQ_TYPE_LEVEL_HIGH>,
+		             <AIC_FIQ AIC_TMR_HV_VIRT IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	/* ADT 里 cpu 节点的 timebase-frequency = 24000000,与这个对上 */
+	clkref: clock-ref {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+		clock-output-names = "clkref";
+	};
+
+	soc: soc {
+		compatible = "simple-bus";
+		#address-cells = <2>;
+		#size-cells = <2>;
+
+		ranges;
+		nonposted-mmio;
+
+		/*
+		 * M5 的 pmgr 节点带**两段** reg:
+		 *   0x1_70700000 + 0xd0000   <- M4 的主 pmgr
+		 *   0x1_78280000 + 0x80000   <- 对应 M4 的 pmgr_mini(那边是分开的两个节点)
+		 * TODO:确认内核的 pmgr 驱动认不认两段 reg
+		 */
+		pmgr: power-management@170700000 {
+			compatible = "apple,t8142-pmgr", "apple,t8103-pmgr", "syscon", "simple-mfd";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x1 0x70700000 0x0 0xd0000>,
+			      <0x1 0x78280000 0x0 0x80000>;
+			/* 子节点在 t8142-pmgr.dtsi 里 */
+		};
+
+		/*
+		 * ⚠️ M5 的 aic 只有**一段** reg(M4 的 DT 是两段:core + event)。
+		 * ADT 里就一段,这里照 ADT 写。真机上要确认 event 段是不是被 macOS 过滤掉了。
+		 * 中断号:aic 自己不占 interrupts 属性。
+		 */
+		aic: interrupt-controller@171000000 {
+			compatible = "apple,t8142-aic3", "apple,t8122-aic3";
+			#interrupt-cells = <3>;
+			interrupt-controller;
+			reg = <0x1 0x71000000 0x0 0x1cc000>;
+			power-domains = <&ps_aic>;
+
+			affinities {
+				e-core-pmu-affinity {
+					apple,fiq-index = <AIC_CPU_PMU_E>;
+					cpus = <&cpu_e0 &cpu_e1 &cpu_e2 &cpu_e3 &cpu_e4 &cpu_e5>;
+				};
+				p-core-pmu-affinity {
+					apple,fiq-index = <AIC_CPU_PMU_P>;
+					cpus = <&cpu_p0 &cpu_p1 &cpu_p2 &cpu_p3>;
+				};
+			};
+		};
+
+		/* ADT 里 wdt 也是两段 reg,第二段是 4 字节的小窗口 */
+		wdt: watchdog@1782b0000 {
+			compatible = "apple,t8142-wdt", "apple,t8103-wdt";
+			reg = <0x1 0x782b0000 0x0 0x4000>,
+			      <0x1 0x782bc230 0x0 0x4>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 361 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		pinctrl_nub: pinctrl@1781f0000 {
+			compatible = "apple,t8142-pinctrl", "apple,t8101-pinctrl";
+			reg = <0x1 0x781f0000 0x0 0x4000>;
+			power-domains = <&ps_nub_gpio>;
+
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&pinctrl_nub 0 0 32>;   /* TODO:npins 照抄 M4,待确认 */
+			apple,npins = <32>;
+
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 574 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 575 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 576 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 577 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 578 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 579 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 580 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		pinctrl_smc: pinctrl@17c820000 {
+			compatible = "apple,t8142-pinctrl", "apple,t8101-pinctrl";
+			reg = <0x1 0x7c820000 0x0 0x4000>;
+
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&pinctrl_smc 0 0 18>;   /* TODO:照抄 M4 */
+			apple,npins = <18>;
+
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 624 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 625 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 626 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 627 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 628 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 629 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 630 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		pinctrl_aop: pinctrl@180824000 {
+			compatible = "apple,t8142-pinctrl", "apple,t8101-pinctrl";
+			reg = <0x1 0x80824000 0x0 0x4000>;
+
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&pinctrl_aop 0 0 57>;   /* TODO:照抄 M4 */
+			apple,npins = <57>;
+
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 480 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 481 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 482 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 483 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 484 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 485 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 486 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
+		pinctrl_ap: pinctrl@18a000000 {
+			compatible = "apple,t8142-pinctrl", "apple,t8101-pinctrl";
+			reg = <0x1 0x8a000000 0x0 0x100000>;
+			power-domains = <&ps_gpio>;
+
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&pinctrl_ap 0 0 224>;   /* TODO:照抄 M4 */
+			apple,npins = <224>;
+
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 347 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 348 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 349 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 350 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 351 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 352 IRQ_TYPE_LEVEL_HIGH>,
+			             <AIC_IRQ 353 IRQ_TYPE_LEVEL_HIGH>;
+
+			/* TODO:pinmux 编号是板级的,照抄 M4,**很可能不对** —— 真机上要重新定 */
+			i2c0_pins: i2c0-pins {
+				pinmux = <APPLE_PINMUX(104, 1)>, <APPLE_PINMUX(103, 1)>;
+			};
+			i2c1_pins: i2c1-pins {
+				pinmux = <APPLE_PINMUX(106, 1)>, <APPLE_PINMUX(105, 1)>;
+			};
+			i2c2_pins: i2c2-pins {
+				pinmux = <APPLE_PINMUX(44, 1)>, <APPLE_PINMUX(43, 1)>;
+			};
+			i2c3_pins: i2c3-pins {
+				pinmux = <APPLE_PINMUX(42, 1)>, <APPLE_PINMUX(41, 1)>;
+			};
+			i2c4_pins: i2c4-pins {
+				pinmux = <APPLE_PINMUX(108, 1)>, <APPLE_PINMUX(107, 1)>;
+			};
+		};
+
+		i2c0: i2c@195010000 {
+			compatible = "apple,t8142-i2c", "apple,t8101-i2c";
+			reg = <0x1 0x95010000 0x0 0x4000>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1247 IRQ_TYPE_LEVEL_HIGH>;
+			pinctrl-0 = <&i2c0_pins>;
+			pinctrl-names = "default";
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			power-domains = <&ps_i2c0>;
+			status = "disabled";
+		};
+
+		i2c1: i2c@195014000 {
+			compatible = "apple,t8142-i2c", "apple,t8101-i2c";
+			reg = <0x1 0x95014000 0x0 0x4000>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1248 IRQ_TYPE_LEVEL_HIGH>;
+			pinctrl-0 = <&i2c1_pins>;
+			pinctrl-names = "default";
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			power-domains = <&ps_i2c1>;
+			status = "disabled";
+		};
+
+		i2c2: i2c@195018000 {
+			compatible = "apple,t8142-i2c", "apple,t8101-i2c";
+			reg = <0x1 0x95018000 0x0 0x4000>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1249 IRQ_TYPE_LEVEL_HIGH>;
+			pinctrl-0 = <&i2c2_pins>;
+			pinctrl-names = "default";
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			power-domains = <&ps_i2c2>;
+			status = "disabled";
+		};
+
+		i2c3: i2c@19501c000 {
+			compatible = "apple,t8142-i2c", "apple,t8101-i2c";
+			reg = <0x1 0x9501c000 0x0 0x4000>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1250 IRQ_TYPE_LEVEL_HIGH>;
+			pinctrl-0 = <&i2c3_pins>;
+			pinctrl-names = "default";
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			power-domains = <&ps_i2c3>;
+			status = "disabled";
+		};
+
+		i2c4: i2c@195020000 {
+			compatible = "apple,t8142-i2c", "apple,t8101-i2c";
+			reg = <0x1 0x95020000 0x0 0x4000>;
+			clocks = <&clkref>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1251 IRQ_TYPE_LEVEL_HIGH>;
+			pinctrl-0 = <&i2c4_pins>;
+			pinctrl-names = "default";
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			power-domains = <&ps_i2c4>;
+			status = "disabled";
+		};
+
+		/* 注意:M4 里这个叫 fpwm1,ADT 里 M5 只有 fpwm0 */
+		fpwm0: pwm@195040000 {
+			compatible = "apple,t8142-fpwm", "apple,s5l-fpwm";
+			reg = <0x1 0x95040000 0x0 0x4000>;
+			power-domains = <&ps_fpwm0>;
+			clocks = <&clkref>;
+			#pwm-cells = <2>;
+			status = "disabled";
+		};
+
+		serial0: serial@195200000 {
+			compatible = "apple,s5l-uart";
+			reg = <0x1 0x95200000 0x0 0x4000>;
+			reg-io-width = <4>;
+			interrupt-parent = <&aic>;
+			interrupts = <AIC_IRQ 1231 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&clkref>, <&clkref>;
+			clock-names = "uart", "clk_uart_baud0";
+			power-domains = <&ps_uart0>;
+			status = "disabled";
+		};
+	};
+};
+
+#include "t8142-pmgr.dtsi"

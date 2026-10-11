@@ -140,11 +140,33 @@ M5: 0x1_7xxxxxxx
 **三个卡点解决了两个。M5 到"串口出字"的距离,比想象近得多:**
 
 ```
-t8142.dtsi        ~440 行,照抄 M4 + 换地址 + 换中断号   ← 数据齐了 ✅
-t8142-pmgr.dtsi   已生成(135 条,dtc 编译通过)          ← 完成 ✅
-t8142-jxxx.dtsi   ~48 行 boilerplate                    ← 待做
-t8142-j704.dts     ~35 行                                ← 待做
+t8142.dtsi        已写出, **dtc 编译通过**(187 个节点)   ← ✅
+t8142-pmgr.dtsi   已生成(135 条,dtc 编译通过)           ← ✅
+t8142-jxxx.dtsi   ~48 行 boilerplate                     ← 待做(照抄)
+t8142-j704.dts     ~35 行                                 ← 待做(照抄)
 ```
+
+### 5.1 怎么编译验证的
+
+macOS 自带的 `dtc` **不带预处理器**,吃不了 `#include <...>` 和 `#address-cells`。
+两个绕法(只是验证用,真编译走内核构建系统):
+
+```bash
+# ① 把 #include <...> 删掉,把宏展开成字面量(AIC_IRQ→0 等)
+# ② 文件是被 include 的,要包一层壳:
+printf '/dts-v1/;\n/include/ "t8142.dtsi"\n' > w.dts
+dtc -I dts -O dtb -o out.dtb w.dts
+```
+
+### 5.2 草稿里还标着 TODO 的地方
+
+| 位置 | 内容 |
+|---|---|
+| CPU 的 `compatible` | §3.2 未定,先按 ADT 的 `sawtooth`/`everest` 写 |
+| CPU 的 `reg` | 用了 M5 的 `0x100..0x103`,与 M4 的 `0x10100` 编码不同,待确认 |
+| L2 大小 / `apple,npins` / `gpio-ranges` | 照抄 M4,需从 ADT 或真机确认 |
+| pinctrl 的 `pinmux` 编号 | **板级数据,照抄 M4 很可能不对** |
+| pmgr / aic / wdt 的多段 `reg` | M5 与 M4 段数不同,内核认不认待确认 |
 
 **只剩一个真卡点:CPU 的 compatible 到底叫什么**(§3.2)。
 那个需要真机上读 MIDR —— 半小时能问清楚。
