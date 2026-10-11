@@ -77,7 +77,7 @@ at this time**"*(比 WIP 还低一档)。Installer = **no**。
 | ⭐ **DFU 兜底(从 Linux 直接恢复,restorekit)** | ✅ 2026-10-11 新增,见 `PROVENANCE.md` |
 | 数据线已验证 | ✅ |
 | 游戏本装 Ubuntu Desktop | ✅ 2026-10-11(Ubuntu 26.04 LTS Desktop;`tools/check_host.sh` **13/13 全绿**) |
-| **先下好一个 macOS IPSW 存着**(27.0.1 / 26A434) | ⏳ 下载中 ⚠️ **唯一事后补不了的** |
+| **先下好一个 macOS IPSW 存着**(27.0.1 / 26A434) | ✅ 已下 + sha256 校验(26.6 GB) ⚠️ 唯一事后补不了的 |
 | M5 关掉 FileVault | ⬜ |
 
 ---
@@ -126,7 +126,7 @@ at this time**"*(比 WIP 还低一档)。Installer = **no**。
 ## 下一步
 
 ```
-1. 下好 macOS IPSW 存着        ← 下载中,唯一补不了的
+1. ~~下好 macOS IPSW 存着~~     ✅ 已完成(唯一补不了的,已解决)
 2. M5 关 FileVault
 3. ~~游戏本装 Ubuntu Desktop~~  ✅ 已完成(2026-10-11)
 4. ~~bash tools/check_host.sh~~  ✅ 13/13 全绿
