@@ -164,6 +164,37 @@ python3 tools/scrub_adt.py --verify <要外发的文件>
 
 ---
 
+
+## 🚨🚨 真实案例:有人**误抹了整个盘**(包括固件和恢复环境)
+
+来源:`ImAtomiskk/asahim5` 的 `notes/unrelated.md`(**同一台机器 J704**)。
+
+> Selected "Macintosh HD" in Disk Utility from **recoveryOS** and clicked **Erase**.
+> Normally macOS prompts "this is the main drive, do you want to reset your Mac instead?"
+> — **this prompt never appeared**, and Disk Utility erased the entire disk
+> **including firmware and recoveryOS/1TR**.
+
+**诱因**:他们推测是**"之前的折腾改动了系统状态"**,导致 Disk Utility
+没认出那是启动卷,于是当成普通卷抹掉了。
+
+> ⚠️ **"之前的折腾" = 就是做了 m1n1 那套之后。** 换言之:
+> **做过 M1 之后,在恢复环境里用磁盘工具是危险的。**
+
+### 恢复代价
+
+- **~6 小时**(7-8 小时减去走弯路的)
+- **不需要第二台 Mac** —— 纯 Linux + `libimobiledevice` 就行
+- **最难的一步:恢复环境没了之后怎么进 DFU** ——
+  他写"**exact method forgotten — research this before next incident**"
+
+### 对我们的三条行动
+
+1. **⭐ 先下好签名有效的 IPSW 存着** —— 这是唯一事后补不了的
+2. **做过 M1 之后,别在恢复环境里碰磁盘工具的 Erase**
+3. **提前搞清楚"没有恢复环境时怎么进 DFU"** —— 别等出事了再查
+
+---
+
 ## 兜底:真把机器搞砖了
 
 需要:**另一台 Mac** + USB-C 线 + **Apple Configurator**,把 M5 进 DFU 模式恢复。
