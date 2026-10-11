@@ -51,6 +51,15 @@ RE_FIELD = re.compile(r"^\s*(bus_addr|parent_addr|addr|size)\s*=\s*(0x[0-9a-fA-F
 
 
 class Node:
+    """⚠️ 注意与 `adtlib.Node` 的接口差异:
+
+    - 本类的 `walk()` 只产出 **节点**;`adtlib.Node.walk()` 产出 **(节点, 深度)** 元组
+    - 本类 `props` 的值是**字符串**(文本 dump 的原文);`adtlib` 的是 bytes/原生类型
+    - `base_name` 两边都有(本类是后补的, 见下)
+
+    两套 API 不一致是我自己写审计脚本时被绊过两次的地方 —— 用之前先看清是哪一套。
+    """
+
     __slots__ = ("name", "props", "children", "depth")
 
     def __init__(self, name: str, depth: int):
@@ -58,6 +67,15 @@ class Node:
         self.depth = depth
         self.props: dict = {}      # key -> 原始字符串值
         self.children: list = []
+
+    @property
+    def base_name(self) -> str:
+        """去掉单元地址后的节点名(与 adtlib.Node 对齐)。"""
+        return self.name.split("@", 1)[0]
+
+    @property
+    def unit_addr(self) -> str | None:
+        return self.name.split("@", 1)[1] if "@" in self.name else None
 
     def __repr__(self) -> str:
         return "Node(%s, %d props, %d kids)" % (self.name, len(self.props), len(self.children))
