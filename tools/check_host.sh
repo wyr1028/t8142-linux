@@ -67,11 +67,13 @@ echo
 echo "═══ Python 包(tethered boot 的 proxyclient 要用)═══"
 chk "pyserial(import serial)" \
     "python3 -c 'import serial'" \
-    "pip3 install --user pyserial construct serial.tool"
+    "Ubuntu: sudo apt install python3-serial / 其他: pip3 install --user pyserial"
 chk "construct(import construct)" \
     "python3 -c 'import construct'" \
-    "pip3 install --user pyserial construct serial.tool"
+    "Ubuntu: sudo apt install python3-construct / 其他: pip3 install --user construct"
 printf "     ${Y}注${N}: Ubuntu 24.04 起 pip3 --user 会被 PEP 668 拦,用 venv 或加 --break-system-packages\n"
+printf "     ${Y}注${N}: 别装 PyPI 的 serial.tool —— m1n1 要的 serial.tools 由 pyserial 提供\n"
+printf "          (serial.tool 是个无关的小包; 写上它纯属多余且可能误导)\n"
 
 echo
 echo "═══ Rust(m1n1 有 Rust 部分,别漏)═══"
