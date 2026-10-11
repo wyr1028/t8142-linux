@@ -104,6 +104,7 @@ docs/
   DTS-BACKLOG.md     M4 到底做了多少(440 行)/ M5 缺什么 / 三个格式问题
   M5-PRIOR-ART.md    M5 上有没有人做过了 —— 现有工作、地址规则、真正的难点
   OFFICIAL-TETHERED-BOOT.md  官方 tethered boot 文档要点(权威版本)
+  M5-MEMMAP.md       M5/J704 内存映射(从原始 ADT 生成, 已交叉验证)
 tools/
   adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点

@@ -1,0 +1,164 @@
+# M5 (T8142 / J704) 内存映射
+
+> 由 `tools/adt_txt.py --memmap` 从**原始 ADT** 生成。
+> 来源:`ImAtomiskk/asahim5` 的 `dump/m5_adt.txt`(J704 实测,已脱敏)。
+> 格式照官方 `docs/hw/soc/memmap.md`。
+>
+> **地址已应用翻译**:物理地址 = ADT 子地址 + `0x2_1000_0000`
+> (来自 `arm-io` 的 `ranges` 第一条,一手数据)。
+>
+> **交叉验证**:与 `sentaxic/asahi-m5` 从 ioreg 推的 140 条相比,
+> **121 条地址完全一致** —— 两个独立来源互相印证。差异来自板子不同(J704 vs J813)。
+
+```
+     phys base        size  node
+--------------------------------------------------------
+0x000281080000  0x0000c000  /device-tree/arm-io/dart-ave
+0x000281100000  0x0045c000  /device-tree/arm-io/ave
+0x000284000000  0x00b1c000  /device-tree/arm-io/disp0
+0x000286140000  0x00024000  /device-tree/arm-io/admac-disp0
+0x000286180000  0x00020000  /device-tree/arm-io/dart-disp0-isoc
+0x0002862f4000  0x00004000  /device-tree/arm-io/admac-disp0-ced-ssw
+0x000286300000  0x0000c000  /device-tree/arm-io/dart-disp0
+0x000286340000  0x00020000  /device-tree/arm-io/dart-dcp
+0x0002863ac050  0x00000004  /device-tree/arm-io/dcp0-expert
+0x000286e00000  0x00088000  /device-tree/arm-io/dcp
+0x000301000000  0x00004000  /device-tree/arm-io/jpeg0
+0x000301020000  0x0000c000  /device-tree/arm-io/dart-jpeg
+0x000301060000  0x00004000  /device-tree/arm-io/jpeg1
+0x000305000000  0x00014000  /device-tree/arm-io/scaler0
+0x000305260000  0x00020000  /device-tree/arm-io/dart-scaler
+0x000308b80000  0x00020000  /device-tree/arm-io/dart-sep
+0x000308d00000  0x00040000  /device-tree/arm-io/error-handler
+0x00030a600000  0x00088000  /device-tree/arm-io/sep
+0x000380300000  0x0000c000  /device-tree/arm-io/dart-pmp
+0x000380700000  0x000d0000  /device-tree/arm-io/pmgr
+0x000380700000  0x000d0000  /device-tree/arm-io/event-log-handler
+0x000380780000  0x00004000  /device-tree/arm-io/mcc
+0x000380e00000  0x00088000  /device-tree/arm-io/pmp
+0x000381000000  0x001cc000  /device-tree/arm-io/aic
+0x000388128000  0x00010000  /device-tree/arm-io/dockchannel-uart
+0x0003881f0000  0x00004000  /device-tree/arm-io/nub-gpio
+0x0003881f0000  0x00004000  /device-tree/arm-io/secure-repair
+0x0003882b0000  0x00004000  /device-tree/arm-io/wdt
+0x000388614000  0x00004000  /device-tree/arm-io/nub-spmi1
+0x000388714000  0x00004000  /device-tree/arm-io/nub-spmi0
+0x000388908000  0x00004000  /device-tree/arm-io/nub-spmi-a0
+0x000388a08000  0x00004000  /device-tree/arm-io/nub-spmi-a1
+0x000389b00000  0x00028000  /device-tree/arm-io/dbgCPU
+0x00038c600000  0x00088000  /device-tree/arm-io/smc
+0x00038c820000  0x00004000  /device-tree/arm-io/smc-gpio
+0x00038c840000  0x00004000  /device-tree/arm-io/aon-ptd
+0x000390600000  0x00088000  /device-tree/arm-io/aop
+0x000390824000  0x00004000  /device-tree/arm-io/aop-gpio
+0x000390914000  0x00004000  /device-tree/arm-io/aop-spmi0
+0x000390fc0000  0x0000c000  /device-tree/arm-io/dart-aop
+0x000391600000  0x00088000  /device-tree/arm-io/aop2
+0x000393200000  0x00034000  /device-tree/arm-io/admac-leap-s
+0x000393300000  0x00034000  /device-tree/arm-io/admac-leap-ns
+0x000393800000  0x00034000  /device-tree/arm-io/admac-base-ns
+0x000393c80000  0x00004000  /device-tree/arm-io/admac-aop-ced-ssw
+0x000394600000  0x00088000  /device-tree/arm-io/mtp
+0x000394800000  0x0000c000  /device-tree/arm-io/dart-mtp
+0x000394b00000  0x00001000  /device-tree/arm-io/dockchannel-mtp
+0x00039a000000  0x00100000  /device-tree/arm-io/gpio0
+0x00039a760000  0x00004000  /device-tree/arm-io/dptx0-aux
+0x00039a764000  0x00004000  /device-tree/arm-io/dptx1-aux
+0x0003a1000000  0x00004000  /device-tree/arm-io/apr
+0x0003a1020000  0x0000c000  /device-tree/arm-io/dart-apr
+0x0003a1040000  0x00020000  /device-tree/arm-io/dart-scdc
+0x0003a500c000  0x00004000  /device-tree/arm-io/aes
+0x0003a5010000  0x00004000  /device-tree/arm-io/i2c0
+0x0003a5014000  0x00004000  /device-tree/arm-io/i2c1
+0x0003a5018000  0x00004000  /device-tree/arm-io/i2c2
+0x0003a501c000  0x00004000  /device-tree/arm-io/i2c3
+0x0003a5020000  0x00004000  /device-tree/arm-io/i2c4
+0x0003a5040000  0x00004000  /device-tree/arm-io/fpwm0
+0x0003a5060000  0x00020000  /device-tree/arm-io/dart-sio
+0x0003a5108000  0x00004000  /device-tree/arm-io/spi2
+0x0003a5110000  0x00004000  /device-tree/arm-io/spi4
+0x0003a5118000  0x00004000  /device-tree/arm-io/qspi
+0x0003a5200000  0x00004000  /device-tree/arm-io/uart0
+0x0003a5e00000  0x00088000  /device-tree/arm-io/sio
+0x0003a8000000  0x00b1c000  /device-tree/arm-io/dispext1
+0x0003aa140000  0x00024000  /device-tree/arm-io/admac-dispext1
+0x0003aa180000  0x00020000  /device-tree/arm-io/dart-dispext1-isoc
+0x0003aa2f4000  0x00004000  /device-tree/arm-io/admac-dispext1-ced-ssw
+0x0003aa300000  0x0000c000  /device-tree/arm-io/dart-dispext1
+0x0003aa340000  0x00020000  /device-tree/arm-io/dart-dcpext1
+0x0003aa3ac050  0x00000004  /device-tree/arm-io/dcpext1-expert
+0x0003aae00000  0x00088000  /device-tree/arm-io/dcpext1
+0x000401108000  0x00004000  /device-tree/arm-io/acio-cpu0
+0x000401a80000  0x0000c000  /device-tree/arm-io/dart-acio0
+0x000401e50000  0x00004000  /device-tree/arm-io/atc0-dpin0
+0x000401e58000  0x00004000  /device-tree/arm-io/atc0-dpin1
+0x000401f00000  0x00100000  /device-tree/arm-io/acio0
+0x000402280000  0x00011800  /device-tree/arm-io/usb-drd0
+0x000402a90000  0x00004000  /device-tree/arm-io/atc-phy0
+0x000402f00000  0x0000c000  /device-tree/arm-io/dart-usb0
+0x00040304c000  0x00004000  /device-tree/arm-io/atc0-dpxbar
+0x000404000000  0x0000c000  /device-tree/arm-io/dart-apciec0
+0x000404068000  0x00004000  /device-tree/arm-io/apciec0-piodma
+0x000409108000  0x00004000  /device-tree/arm-io/acio-cpu1
+0x000409a80000  0x0000c000  /device-tree/arm-io/dart-acio1
+0x000409e50000  0x00004000  /device-tree/arm-io/atc1-dpin0
+0x000409e58000  0x00004000  /device-tree/arm-io/atc1-dpin1
+0x000409f00000  0x00100000  /device-tree/arm-io/acio1
+0x00040a280000  0x00011800  /device-tree/arm-io/usb-drd1
+0x00040aa90000  0x00004000  /device-tree/arm-io/atc-phy1
+0x00040af00000  0x0000c000  /device-tree/arm-io/dart-usb1
+0x00040b04c000  0x00004000  /device-tree/arm-io/atc1-dpxbar
+0x00040c000000  0x0000c000  /device-tree/arm-io/dart-apciec1
+0x00040c068000  0x00004000  /device-tree/arm-io/apciec1-piodma
+0x000412a90000  0x00004000  /device-tree/arm-io/atc-phy2
+0x00041304c000  0x00004000  /device-tree/arm-io/atc2-dpxbar
+0x000419108000  0x00004000  /device-tree/arm-io/acio-cpu3
+0x000419a80000  0x0000c000  /device-tree/arm-io/dart-acio3
+0x000419e50000  0x00004000  /device-tree/arm-io/atc3-dpin0
+0x000419e58000  0x00004000  /device-tree/arm-io/atc3-dpin1
+0x000419f00000  0x00100000  /device-tree/arm-io/acio3
+0x00041a280000  0x00011800  /device-tree/arm-io/usb-drd3
+0x00041aa90000  0x00004000  /device-tree/arm-io/atc-phy3
+0x00041af00000  0x0000c000  /device-tree/arm-io/dart-usb3
+0x00041b04c000  0x00004000  /device-tree/arm-io/atc3-dpxbar
+0x00041c000000  0x0000c000  /device-tree/arm-io/dart-apciec3
+0x00041c068000  0x00004000  /device-tree/arm-io/apciec3-piodma
+0x000420000000  0x02000000  /device-tree/arm-io/ane
+0x000420f00000  0x00002000  /device-tree/arm-io
+0x000421800000  0x0000c000  /device-tree/arm-io/dart-ane
+0x000481600000  0x00088000  /device-tree/arm-io/ans
+0x000485c50000  0x0000c000  /device-tree/arm-io/sart-ans
+0x000488000000  0x00020000  /device-tree/arm-io/dart-apcie0
+0x000488030000  0x00004000  /device-tree/arm-io/apcie0-piodma
+0x00048a000000  0x00020000  /device-tree/arm-io/dart-apcie2
+0x00048a030000  0x00004000  /device-tree/arm-io/apcie2-piodma
+0x0004a0000000  0x04000000  /device-tree/arm-io/isp
+0x0004a28c0000  0x0000c000  /device-tree/arm-io/dart-isp
+0x0004e1800000  0x00480000  /device-tree/arm-io/isp-exclave-s-proxy
+0x000500000000  0x01404000  /device-tree/arm-io/avd
+0x000501020000  0x00020000  /device-tree/arm-io/dart-avd
+0x000504000000  0x00b1c000  /device-tree/arm-io/dispext0
+0x000506140000  0x00024000  /device-tree/arm-io/admac-dispext0
+0x000506180000  0x00020000  /device-tree/arm-io/dart-dispext0-isoc
+0x0005062f4000  0x00004000  /device-tree/arm-io/admac-dispext0-ced-ssw
+0x000506300000  0x0000c000  /device-tree/arm-io/dart-dispext0
+0x000506340000  0x00020000  /device-tree/arm-io/dart-dcpext0
+0x0005063ac050  0x00000004  /device-tree/arm-io/dcpext0-expert
+0x000506e00000  0x00088000  /device-tree/arm-io/dcpext0
+0x00055a67c000  0x00004000  /device-tree/arm-io/esm
+0x000580000000  0x04000000  /device-tree/arm-io/sgx
+0x000582600000  0x00088000  /device-tree/arm-io/gfx-asc
+0x000582e00000  0x00088000  /device-tree/arm-io/gfx1-asc
+0x000591180000  0x00001000  /device-tree/arm-io/aic-timebase
+0x00059de7e014  0x00000318  /device-tree/socd-trace-ram
+0x0005d82b0000  0x00004000  /device-tree/arm-io/hib-exclave-watchdog
+0x0005e067c000  0x00004000  /device-tree/arm-io/aop-exclave-mailbox
+0x0005e3200000  0x00034000  /device-tree/arm-io/admac-leap-s-rx-0-proxy
+0x001c50000000  0x10000000  /device-tree/arm-io/apciec0
+0x001c60000000  0x10000000  /device-tree/arm-io/apciec1
+0x001c80000000  0x10000000  /device-tree/arm-io/apciec3
+0x001cb0000000  0x10000000  /device-tree/arm-io/apcie
+0x0103d3aa8000  0x057ac000  /device-tree/vram
+0x0103da278000  0x00188000  /device-tree/pram
+0x400000000000001  0x00000001  /device-tree/hibernate
+```

@@ -174,7 +174,30 @@ def main() -> int:
     g = ap.add_mutually_exclusive_group()
     g.add_argument("--ranges", action="store_true", help="只看地址翻译窗口")
     g.add_argument("--tree", action="store_true", help="打印层级树")
+    g.add_argument("--memmap", action="store_true",
+                   help="输出内存映射表(照官方 docs/hw/soc/memmap.md 的格式)")
+    g.add_argument("--list", action="store_true", help="列节点 + 子地址 + 物理地址")
     args = ap.parse_args()
+
+    if args.memmap:
+        root = parse(args.txt)
+        w = windows(root)
+        rows = []
+        for n in walk(root):
+            a = first_reg_addr(n)
+            if a is None:
+                continue
+            rows.append((translate(a, w), n))
+        rows.sort(key=lambda r: r[0])
+        print("     phys base        size  node")
+        print("-" * 56)
+        for phys, n in rows:
+            size = 0
+            for m in re.finditer(r"size\s*=\s*(0x[0-9a-fA-F]+)", n.props.get("reg", "")):
+                size = int(m.group(1), 16)
+                break
+            print("0x%012x  0x%08x  %s" % (phys, size, path_of(root, n)))
+        return 0
 
     root = parse(args.txt)
 
