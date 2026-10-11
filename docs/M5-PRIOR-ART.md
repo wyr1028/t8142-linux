@@ -307,3 +307,82 @@ M5 上只有两个 UART:`uart0 @ 0x3a5200000`、`dockchannel-uart @ 0x388128000`
 | ADT→DTS | ✅ m1n1 自带 `pmgr_adt2dt.py` | 用它 |
 | 内核引导 | ⚠️ 别人"80-90%" | ⭐ **真正的墙** |
 | SPTM shim | ⚠️ 有桩,未验证 | 阶段 4 再看 |
+
+---
+
+## 9 官方文档仓库的发现(三次调查)
+
+`asahilinux.org` 我这边取不到,但 **`AsahiLinux/docs` 仓库**可以 —— 全套官方文档在里面。
+
+### 9.1 ⭐ 官方 M5 特性支持页:`docs/platform/feature-support/m5.md`
+
+**结论:M5 全部 `TBA`。**
+
+> `TBA` 的官方定义:**"Active work on this feature is not being undertaken at this time"**
+> (目前没有在开展这项工作)
+
+| | M5 (T8142) |
+|---|---|
+| **Installer** | **no** |
+| Devicetree / 主屏 / 键盘 / 触控板 / 电池 / WiFi / 蓝牙 / 扬声器 / 摄像头 | 全部 **TBA** |
+| AICv3 / DART / PMU / UART / Watchdog / I²C / GPIO / SPI / SMC / SPMI / RTC / SEP / ANE | 全部 **TBA** |
+| GPU / NVMe / PCIe / Video Decoder-Encoder | 全部 **TBA** |
+
+**意思:官方 Asahi 项目当前没有在做 M5。**
+我们在追的那三四个项目全是**社区**的,不是官方的。
+
+> 注:表格有 "Note: Many peripherals depend on DART and PCIe support."
+
+### 9.2 ⭐ SoC 代号表:`docs/hw/soc/soc-codenames.md`
+
+| 营销名 | 内部 | 代号 | SoC | P 核 | E 核 |
+|---|---|---|---|---|---|
+| M3 | H15G | Ibiza | T8122 | **Everest** | **Sawtooth** |
+| M4 | H16G | Donan | T8132 | (空) | (空) |
+| **M5** | **H17G** | **Hidra** | **T8142** | (空) | (空) |
+| M5 Pro | H17S | Sotra_S | T6050 | | |
+| M5 Max | H17C | Sotra_C | T6050 | | |
+| A19 Pro | H18P | Thera | T8150 | | |
+
+**官方确认:M5 = H17G / Hidra / T8142。**
+
+### 9.3 ✅ 核名"冲突"可能是**我看错了**
+
+`HARDWARE.md §3` 记了"三源打架":ADT 说 `sawtooth/everest`,m1n1 说 `Hidra`。
+
+**现在看,可能不是冲突:**
+
+- **`Everest` / `Sawtooth` 是 M3 的核代号**(官方表确认)
+- **`Hidra` 是 M5 的芯片代号**
+- m1n1 的 `chickens.c` 里那行是 `"M5 Hidra (E core)"` ——
+  **它拿芯片代号给核当标签**,而 ADT 给的是核代号
+
+**两者说的是不同层面的东西,不矛盾。**
+
+> ⚠️ 但**还没定论**:官方表里 M4/M5 的核列**是空的**,说明还没写。
+> 真要确定,还得真机读 MIDR 对照。
+
+### 9.4 ⭐ 定时器**绕过 AIC**
+
+`docs/hw/soc/aic.md` 末尾:
+
+> The system timer is the standard ARM64 **MSR** stuff, and **bypasses AIC**.
+> It is wired straight to **FIQ**.
+
+**即使 AICv3 不支持,定时器中断照样能来。**
+这是"AICv3 不是启动阻碍"的第三条独立证据(前两条:m1n1 已有 aic3 代码、
+Linux 认 `apple,t8122-aic3`)。
+
+### 9.5 其它可用的官方文档
+
+| 文档 | 内容 |
+|---|---|
+| `docs/sw/m1n1-dev-guide.md` | proxy 的完整细节 |
+| `docs/sw/m1n1-hypervisor.md` | hypervisor 模式 |
+| `docs/sw/u-boot.md` | U-Boot 引导 |
+| `docs/sw/kernel-config.md` | **内核 config** —— 编译 asahi 内核要用 |
+| `docs/sw/devicetree-bindings.md` | 设备树 binding |
+| `docs/hw/soc/memmap.md` | 内存映射 |
+| `docs/hw/soc/aic.md` | **AIC 寄存器笔记**(SET/CLR 风格、IPI 流程) |
+| `docs/hw/cpu/apple-instructions.md` | CPU 指令 |
+| `docs/platform/feature-support/overview.md` | 全世代对照 |
