@@ -176,39 +176,78 @@ csrutil disable        # bputil 会重置 SIP,所以放后面
 
 ---
 
-## ⑤ 装启动对象 —— ⚠️ **这里必须读权威文档**
+## ⑤ 装启动对象
 
-**我要诚实说清楚**:卷怎么规划,我**没有可靠来源**,不猜。
+> ⚠️ **下面的流程来自公开文档的搜索引擎摘要,不是官方页面原文**
+> (asahilinux.org 在我这边的网络取不到)。
+> **动手前务必对照原文核对:**
+> - m1n1 User Guide — https://asahilinux.org/docs/sw/m1n1-user-guide/
+> - Tethered Boot Setup (For Developers) — AsahiLinux/docs 仓库 wiki
 
-你要去找的是这两个地方:
+### 关键发现:**不用自己规划卷**
 
-1. **m1n1 User Guide** —— https://asahilinux.org/docs/sw/m1n1-user-guide/
-2. m1n1 源码里自带的 README
+之前我以为要手搓一个 stub 卷。**实际上有现成流程,stub 由安装器自动创建。**
 
-要找的答案:
+**① 先腾空间**(在 macOS 里)
 
-- **装到哪个卷上?** 文档里的做法通常是用一个**独立的小 APFS 卷**当 stub,
-  这样 macOS 自己的卷不动、数据安全
-- **要不要把那个卷设成默认启动磁盘?**
-- **`-v` 后面到底填什么路径?**
+```bash
+diskutil list                    # 看清容器和分区号
+diskutil apfs resizeContainer disk0s2 100GB
+```
 
-命令的**形态**长这样(macOS ≥ 12.1):
+> ⚠️ **别把 macOS 缩到 70 GB 以下。** 需要 macOS 12.3+ 和管理员密码。
+> 这一步只是缩小 macOS 容器、腾出未分配空间,不动数据。
+
+**② 跑安装器**(它会创建约 3 GB 的 stub 容器,命名 "Linux")
+
+```bash
+curl -L https://mrcn.st/alxsh | sh
+```
+
+提示选 stub 的基础版本时,选 **macOS 12.1**。
+
+**③ 进 1TR 跑 step2**
+
+按电源键 → 选项 → 终端:
+
+```bash
+/Volumes/Linux/step2.sh
+```
+
+这一步"为自定义内核做好准备",并把 m1n1 设为那个 stub 的内核。
+
+### 如果走手动方式
+
+在 1TR 里:
 
 ```bash
 kmutil configure-boot -c m1n1.bin \
     --raw --entry-point 2048 --lowest-virtual-address 0 \
-    -v <目标卷>
+    -v /Volumes/Linux
 ```
 
-**已知的坑**:
+**`-v` 指向的就是那个 stub 容器**(名字叫 `Linux`),
+**不是 `Macintosh HD`。**
+
+### 已知的坑
 
 | 报错 | 原因 |
 |---|---|
-| `not paired` | 不是从**目标 OS 自己的**恢复环境里跑的 |
+| `not paired` | 不是从**目标卷自己的**恢复环境里跑的 |
 | `Fileset Error: Invalid Mach-O boot properties` | 目标卷不是默认启动磁盘 |
 
-> **最要紧的一条**:`-v` 指向的**绝对不能是 macOS 那个卷**(通常叫 Macintosh HD)。
+> 🚨 **最要紧的一条**:`-v` 指向的**绝对不能是 macOS 那个卷**。
 > 指错了可能让 macOS 起不来 —— 那正是备份要救的场面。
+
+### ⚠️ 一个需要你拍板的点
+
+**这个流程用了 Asahi 的安装器和 `step2.sh`。**
+
+之前我们说"独立项目、不碰上游",但**启动这一块的现成路径确实是他们的**。
+自己复刻 stub 容器的创建过程,工作量大得多。
+
+**决策点:接受这个依赖(用他们的安装器装 boot 环境),还是自己实现?**
+我倾向前者 —— 这不影响项目其余部分的独立性。
 
 ---
 
@@ -224,14 +263,42 @@ kmutil configure-boot -c m1n1.bin \
 
 ## ⑦ 建连接 —— **判据在这里**
 
-在 Linux 主机上:
+> 同样来自公开文档摘要,**对照原文核对**。
+
+### 宿主侧依赖(在游戏本上)
 
 ```bash
-cd m1n1
-# 具体入口看仓库 README 与 user guide
+pip3 install --user pyserial construct serial.tool
+```
+
+> ⚠️ Ubuntu 24.04 起 `pip3 install --user` 会被 PEP 668 拦。
+> 用 venv,或者加 `--break-system-packages`。
+
+### 调试口在哪个口
+
+**MacBook:左侧最靠屏幕的那个雷雳口。**
+(不是随便一个口 —— m1n1 的 device-mode USB 走的是特定的那个。)
+
+### 连上去
+
+```bash
+export M1N1DEVICE=/dev/ttyACM0
 ```
 
 **看到 m1n1 的交互提示符 = M1 完成。** 🎉
+
+> 认不到 `/dev/ttyACM0`?
+> 1. 先确认插的是**那个口**
+> 2. 再确认线是数据线(§1.4)
+> 3. 最后怀疑 m1n1 没真起来 —— 回 ⑥ 看
+
+### 之后怎么引导内核(M6 会用到)
+
+```bash
+python3 proxyclient/tools/linux.py -b 'earlycon debug rootwait' Image.gz <dtb>
+```
+
+**参数顺序:内核在前,dtb 在后**,initramfs 可选放最后。
 
 ---
 
