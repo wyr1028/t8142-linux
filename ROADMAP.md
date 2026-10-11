@@ -43,8 +43,11 @@
 - [x] 数据线已验证
 - [x] 游戏本装 **Ubuntu Desktop** 双系统
       (2026-10-11: Ubuntu 26.04 LTS Desktop,x86_64;`tools/check_host.sh` **13/13 全绿**)
-- [ ] ⭐ **先下好一个 macOS IPSW 存着**(ipsw.me)—— DFU 恢复要用,
+- [x] ⭐ **先下好一个 macOS IPSW 存着**(ipsw.me)—— DFU 恢复要用,
       没它走到"圆圈叹号"就全完了
+      (2026-10-11: macOS 27.0.1 / 26A434,26.6 GB,已下到游戏本;
+       zip 结构 + 条目数校验通过,含 `aopfw-j704aop`;
+       sha256 `2f016638293c3e641b8b25391a76fbc16563b3711915a5551cf8aa0f5598a5c1`)
 - [ ] M5 上**关掉 FileVault** ← 原来漏了
 
 ---
