@@ -104,21 +104,30 @@
 
 ---
 
-## ⭐ 阶段 3.5 · **AICv3** —— 本项目唯一确定要新写的驱动
+## 阶段 3.5 · AIC —— ⚠️ **先说结论:大概率不是问题**
 
-> 2026-10-11 调查发现(见 [M5-PRIOR-ART.md](docs/M5-PRIOR-ART.md)):
-> **M5 的中断控制器是 `aic,3`(v3)**,而 M1=AICv1、M2~M4=AICv2。
-> **m1n1 和 Linux 都还不支持 v3。** 上游的人把它称为 "Biggest blocker"。
->
-> **没有 irqchip,内核什么都起不来。** 这是本项目真正的硬骨头,
-> 也是唯一没法"照抄 M4"的一块。
+> **2026-10-11 更正。** 我一度把 AICv3 当成"本项目唯一要新写的驱动",
+> 依据是第三方项目 `sentaxic/asahi-m5` 的说法。**查源码后那条说法是错的。**
 
-- [ ] 从**原始 ADT** 拿到 `aic` 节点的全部属性(寄存器偏移线索)
-- [ ] 对着已知的 AICv1/v2 驱动,判断 v3 差在哪
-- [ ] 写/改 irqchip 驱动
-- [ ] 真机验证:中断能收到、时钟能走
+**事实:**
 
-**判据**:内核能在 AICv3 上跑起 timer 中断。
+| 世代 | AIC | 谁支持 |
+|---|---|---|
+| M1 | v1 | m1n1 / Linux |
+| M2 | v2 | m1n1 / Linux |
+| **M3 / M4** | **v3(`apple,t8122-aic3`)** | **m1n1 / Linux 都已支持** |
+| **M5** | **v3(`aic,3`)** | 同上 —— **同一个 compatible** |
+
+- m1n1 `src/aic.c` 有 `aic3` 结构体,`aic23_init(3, node)`;
+  注释:"These are **dynamic on AIC3**, and filled in from the DT"
+- sentaxic 列出的那批 M5 属性(`cap0-offset` / `aic-iack-offset` …)
+  **正是 m1n1 要读的** → 设备树里有,初始化就能跑
+- Linux `irq-apple-aic.c` 同样认 `apple,t8122-aic3`
+
+**所以 AIC 不需要新写驱动。** 剩下的只是真机确认。
+
+- [ ] 真机上确认 `aic,3` 被 m1n1 正确识别
+- [ ] 确认那批 `*-offset` 属性都在
 
 ---
 

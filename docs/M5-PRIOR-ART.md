@@ -34,18 +34,30 @@
 
 实测:12 个节点里 **7 个精确命中**(pmgr / aic / wdt / pinctrl×3 / fpwm0)。
 
-### 2.2 ⚠️ AIC 是 **v3** —— 被作者称为「Biggest blocker」
+### 2.2 ⚠️→✅ AIC 是 **v3** —— 但**那不是问题**(我一度搞错了)
 
-| 项 | 值 |
-|---|---|
-| compatible | **`aic,3`** |
-| 物理基址 | `0x3_8100_0000` |
-| 大小 | `0x1c_c000` |
+sentaxic 的文档说:
 
-> M1 = AICv1,M2/M3/M4 = AICv2,**T8142 报了 `aic,3`,m1n1 和 Linux 的
-> `irq-apple-aic` 都不支持**。没有 irqchip 什么都起不来。
+> M1 = AICv1,M2/M3/M4 = AICv2。T8142 报了 `aic,3` ——
+> 一个 m1n1 和 Linux 都**不支持**的新版本。
 
-文档还附了一组寄存器偏移线索(`cap0-offset`、`aic-iack-offset` 等)。
+**查源码后:这段话是错的。**
+
+| 世代 | AIC | compatible |
+|---|---|---|
+| M1 | v1 | `apple,aic` |
+| M2 | v2 | `apple,aic2` |
+| **M3 / M4** | **v3** | **`apple,t8122-aic3`** |
+| M5 | v3 | `aic,3` |
+
+**M3 和 M4 用的就是 v3。** m1n1 有 `aic3` 结构体 + `aic23_init(3, node)`,
+Linux 的 `irq-apple-aic` 也认 `apple,t8122-aic3`。
+
+而且 m1n1 的 aic3 **从设备树动态读寄存器偏移** —— sentaxic 自己列出的那批
+M5 属性(`cap0-offset` `aic-iack-offset` …)**正是它要的**。
+
+> **教训**:这是同一类错误的第二次 —— 又一次把"看起来合理的第三方说法"
+> 直接采信,没去查一手证据。**别人的文档也可能错。**
 
 ### 2.3 CPU 核名 —— 和我们的观察一致
 
