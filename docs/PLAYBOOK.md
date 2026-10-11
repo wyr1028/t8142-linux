@@ -396,5 +396,15 @@ python3 tools/adt2dts.py raw-adt.dtb --compatibles-only > docs/compatibles.txt
 
 ### 兜底:真把机器搞砖了
 
-需要**另一台 Mac** + USB-C 线 + Apple Configurator,把 M5 进 DFU 模式恢复。
+**两条路,任选:**
+
+1. **另一台 Mac** + USB-C 线 + Apple Configurator(官方路线,一直有效)
+2. ⭐ **Linux 主机直接恢复** —— 不需要第二台 Mac(2026-10-11 新增,见 [PROVENANCE.md](PROVENANCE.md)):
+   `restorekit revive --ipsw <本地IPSW>`(重装固件,**保留**用户数据)
+   / `restorekit restore --ipsw <本地IPSW>`(恢复出厂,**抹盘**)
+
+> ⚠️ Linux 上 DFU 只能**手动**进(不像 Mac 能自动触发)。
+> 14"/16" MacBook Pro 的 DFU 口 = **左侧紧挨 MagSafe 的那个 USB-C 口**;
+> 线必须是**数据线** —— 带闪电/「3」「4」标的雷雳线常常不行。
+
 这就是为什么阶段 0 里"第二台机器"是硬前置。

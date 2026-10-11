@@ -62,6 +62,11 @@
 | 2026-10-11 | **ADT 的 `interrupts` 属性里那个 u32 就是 AIC 中断号** —— 8 个节点的中断个数与连号区间全部与 M4 的 DT 吻合 | 推导 | 同上;见 [DTS-BACKLOG §3.3](DTS-BACKLOG.md) | ✅ |
 | 2026-10-11 | **ADT reg 是 `(lo, hi, size_lo, size_hi)`,DT 要 `(hi, lo, size_hi, size_lo)`** —— 两侧 cell 顺序相反、值一一对应;aic 尺寸 `0x1cc000` 两边完全一致 | 推导 | 同上 §3.1 | ⚠️ 推断,待真机验证 |
 | 2026-10-11 | M4 外设空间在 `0x3_8xxxxxxx`,M5 在 `0x1_7xxxxxxx`(两侧高位各自为常量) | 推导 | 同上 §3.1 | ⚠️ 推断 |
+| 2026-10-11 | **从 Linux 也能 DFU 恢复 Apple Silicon Mac** —— 不必"另一台 Mac + Apple Configurator"。项目原先的兜底前提放宽了 | 公开 | `fcjr/restorekit` README + Apple 官方《如何修复或恢复 Mac 固件》`support.apple.com/108900` | ✅ |
+| 2026-10-11 | restorekit 支持 `--ipsw <本地文件>`(用已下好的固件,不必联网重下),且分 `revive`(重装固件、**保留**用户数据)/ `restore`(**抹盘**)两档 | 公开 | `restorekit restore --help`(v0.5.12 二进制,官方 checksums.txt 校验通过) | ✅ |
+| 2026-10-11 | 目标机当前系统 = macOS **27.0.1 (26A434)**;ipsw.me 上 `Mac17,2` 的最新 IPSW 同为 27.0.1 | 公开 | `api.ipsw.me/v4/device/Mac17,2?type=ipsw` | ✅ |
+| 2026-10-11 | **更正**:`tools/check_host.sh` 的 `pip3 install --user pyserial construct serial.tool` 包名有误 —— `serial.tool` 不是 PyPI 包(pyserial 提供的是 `serial.tools` 模块);本机改用 apt 的 `python3-construct` | 真机 | 本机 `apt install python3-construct` 后 `import construct` 成功(v2.10.68) | ✅ |
+| 2026-10-11 | **M0 主机就绪**:游戏本 = Ubuntu 26.04 LTS **Desktop**,x86_64;`tools/check_host.sh` **13/13 全绿**;`make test` 四个测试文件全过 | 真机 | 本机跑 `bash tools/check_host.sh` 与 `make test` | ✅ |
 
 ---
 
