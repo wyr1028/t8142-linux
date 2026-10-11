@@ -70,12 +70,11 @@
 - [x] compatible 差集(`tools/compat_diff.py`)—— 2026-10-11
 - [x] 硬件清单生成(`tools/adt_report.py`)—— 2026-10-11
 - [x] adtlib 自测 + dtc 交叉验证(`tests/`)—— 2026-10-11
-- [ ] ⭐ **解码 PMGR `devices` 属性**(`tools/pmgr_devices.py`)
-  - **最高优先级,且不用等真机** —— 见 [docs/HARDWARE.md §9](docs/HARDWARE.md)
-  - 数据已有:ioreg 把 18576 字节的 `devices` 原样带出来了,已抽出 335 个电源域名字
-  - 需要:读 m1n1 `src/pmgr.c`(公开 GPL)确定条目格式
-  - 产出:M5 的 power-domain 清单 → 与 M4 的 129 条对齐口径比较
-  - **理由:这是阶段 3 的唯一数据源,提前做等于把分水岭提前**
+- [x] ⭐ 解码 PMGR `devices` 属性(`tools/pmgr_devices.py`)—— 2026-10-11
+  - 结构已解:**48 字节定长 × 387 条**,名字在偏移 32
+  - 详见 [docs/PMGR-DEVICES.md](docs/PMGR-DEVICES.md)
+  - **遗留**:① 字段语义需真机验证 ② 与 M4 的 129 条对照
+    —— 后者要读上游另一个仓库,**先明确要不要读**([LEGAL.md](LEGAL.md) 黄线)
 - [ ] M4 → M5 节点对照表生成器
 
 ---

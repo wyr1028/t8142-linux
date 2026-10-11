@@ -1,4 +1,4 @@
-# m5-linux
+# t8142-linux
 
 在 Apple M5 上运行 Linux 的**独立**移植项目。
 
@@ -49,13 +49,17 @@ docs/
   PROVENANCE.md      来源日志 —— 本项目最重要的合规资产
   PLAYBOOK.md        M0→M7 操作手册,每步带命令与判据
   RISKS.md           实操风险:机器 / 数据 / 时间(讲技术,不讲法律)
+  DEPENDENCIES.md    依赖侵权审查:每个外部依赖的许可证与风险
+  PMGR-DEVICES.md    PMGR `devices` 属性的结构解码(含来源诚实说明)
 tools/
   adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点
   compat_diff.py     compatible 差集(复现 docs/HARDWARE.md §4)
   adt_report.py      硬件清单生成(markdown)
+  pmgr_devices.py    PMGR `devices` 属性解码(387 条电源域)
 tests/
   test_adtlib.py     自测 + dtc 交叉验证(FDT 路径的唯一覆盖)
+  test_pmgr_devices.py  PMGR 结构自测
 dts/                 t8142*.dts* / t8142-j704.dts
 ```
 

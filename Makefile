@@ -9,6 +9,7 @@ help:
 
 test:
 	$(PY) tests/test_adtlib.py
+	$(PY) tests/test_pmgr_devices.py
 
 check: test
 	@$(PY) -m py_compile tools/*.py tests/*.py && echo "语法 OK"
