@@ -38,8 +38,11 @@
 
 - [x] M5 备份已验证可恢复
 - [x] DFU 兜底就位
+- [x] ⭐ **救砖兜底再加一条:从 Linux 直接 DFU 恢复**(restorekit,不必另一台 Mac)
+      (2026-10-11: restorekit 0.5.12 + udev 规则已就位;macOS 27.0.1 IPSW 见下)
 - [x] 数据线已验证
-- [ ] 游戏本装 **Ubuntu Desktop** 双系统
+- [x] 游戏本装 **Ubuntu Desktop** 双系统
+      (2026-10-11: Ubuntu 26.04 LTS Desktop,x86_64;`tools/check_host.sh` **13/13 全绿**)
 - [ ] ⭐ **先下好一个 macOS IPSW 存着**(ipsw.me)—— DFU 恢复要用,
       没它走到"圆圈叹号"就全完了
 - [ ] M5 上**关掉 FileVault** ← 原来漏了
