@@ -7,6 +7,29 @@
 
 ---
 
+> # ✅ 2026-10-11:流程已由**同一台机器**上的项目实测过
+>
+> `ImAtomiskk/asahim5`(J704,和你**同一台**)已经把 M1 走通了,并留下了完整流程。
+> **下面从 ③ 起,以他们的实测步骤为准**,我原来的推断作废(尤其 ⑤ 那步)。
+>
+> 他们的实测结果:**m1n1 编译 ✔ 安装 ✔ proxy 模式 ✔ dump 文件 ✔**,
+> **hypervisor 模式 ✔**,Linux 启动"约 80-90%"。
+>
+> 新增的、我原来完全不知道的三条:
+> - **FileVault 必须先关**(见 §0b)
+> - **1TR 的硬判据:工具菜单里要有「恢复助理」**
+> - **`-v` 他们直接指向 macOS 数据卷**(`/Volumes/Macintosh HD - Data`),不是 stub 卷
+
+---
+
+## 0b ⚠️ 我原来漏了:先关 FileVault
+
+系统设置 → 隐私与安全性 → FileVault → **关掉**。
+
+> 不关的话,后面 m1n1 装上去可能起不来。**这一条我前面完全没提。**
+
+---
+
 ## 0 开始之前
 
 - [ ] 游戏本的 Ubuntu 装好,`bash tools/check_host.sh` **全绿**
@@ -111,21 +134,25 @@ M6  把内核喂进去,串口出字 ← 回到 M5 上操作
 
 ## ① 编译 m1n1(在 Linux 主机上)
 
+**macOS 上也能编**(他们实测的依赖):
+
 ```bash
+brew install make python3 gcc-aarch64-embedded
 git clone --recursive https://github.com/AsahiLinux/m1n1.git
-cd m1n1
+cd m1n1 && make -j$(sysctl -n hw.ncpu)
 ```
 
-> ⚠️ **拉下来之后,先读仓库根的 `AGENTS.md` / `CLAUDE.md` / `GEMINI.md`。**
-> 那个项目明令禁止 AI 参与。**本项目的立场是:只读、不改、不提交。**
-> 你自己读它没问题;别把 AI 写的东西送回去。见 [../LEGAL.md](../LEGAL.md)。
+**Ubuntu 上:**
 
 ```bash
-make
-ls -l build/m1n1.bin
+sudo apt install build-essential git python3 python3-pip gcc-aarch64-linux-gnu
+git clone --recursive https://github.com/AsahiLinux/m1n1.git
+cd m1n1 && make -j$(nproc)
 ```
 
-**判据**:出现 `build/m1n1.bin`。
+> ⚠️ **两个产物都要**:**`.macho` 用于安装,`.bin` 用于 proxy/hypervisor 模式。**
+
+**判据**:`build/` 下同时出现 `m1n1.macho` 和 `m1n1.bin`。
 
 编译失败先解决编译,别往下走 —— 报错贴给我。
 
