@@ -33,19 +33,22 @@
   | T6051 | M5 Max |
   | T8152 | M6 |
 
-## 3 ⚠️ 核名三源冲突 —— **未解决**
+## 3 核名 —— ⚠️ **曾经以为冲突,可能是我看错了**(2026-10-11 更正)
 
 | 来源 | M3 | M4 | M5 |
 |---|---|---|---|
 | 本机 ADT `compatible` | — | — | `apple,sawtooth` / `apple,everest` |
-| m1n1 `midr.h` / `chickens.c`(读真 MIDR) | Sawtooth / Everest | — | **Hidra**(part 0x62 / 0x63) |
-| Linux DTS(`AsahiLinux/linux`) | sawtooth / everest | `apple,donan-e` / `apple,donan-p` | **无** |
+| m1n1 `midr.h` / `chickens.c` | Sawtooth / Everest | — | 标签写 **"Hidra"** |
+| 官方 SoC 代号表(`AsahiLinux/docs`) | Ibiza / **Everest(P) / Sawtooth(E)** | Donan / (核列空) | **Hidra** / (核列空) |
 
-**本机 cpu0-5 → `apple,sawtooth`,cpu6-9 → `apple,everest`**(各带第二项 `ARM,v8`)。
-这与 M4 用 `donan` 不同,反而和 M3 重名。
+**关键**:官方代号表里 **`Hidra` 是 M5 的「芯片」代号**,而 **`Everest`/`Sawtooth` 是「核」代号**
+(表里 M3 那行明确列着)。
 
-**为什么必须先解决**:DTS 里 CPU compatible 写什么,决定内核模块绑到哪段代码。
-三个来源互相矛盾,只能靠真机定性。
+所以 m1n1 那行 `"M5 Hidra (E core)"` 是**拿芯片名给核当标签**,
+而 ADT 给的是**核代号** —— **两者层面不同,不矛盾**。
+
+**仍未定论的地方**:官方表里 M4/M5 的核列**是空的**,说明还没填。
+真要定死,还得真机读 MIDR 对照。**但它不再像之前想的那么"打架"。**
 
 ## 4 m1n1 未引用的 M5 compatible
 
