@@ -70,7 +70,7 @@
 | Linux 主机 | **游戏本 → 装 Ubuntu LTS 双系统** | ⬜ 待装 |
 | DFU 兜底 | **M3 MacBook Air 15" → 装 Apple Configurator 2** | ⬜ 待装 |
 | 数据线 | USB-C **数据线**(不是充电线) | ⬜ 待确认 |
-| 备份 | M5 的 Time Machine,且验证过能恢复 | ⬜ 待做 |
+| 备份 | M5 的 Time Machine,且验证过能恢复 | ✅ **已验证** |
 
 **唯一实打实的准备动作是给游戏本装 Linux。** 装完就能进 `PLAYBOOK.md` 的 M1。
 
