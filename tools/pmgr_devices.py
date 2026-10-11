@@ -98,13 +98,55 @@ def get_devices(adt_path: str, node: str = "pmgr") -> bytes:
     raise LookupError("在 %s 里没找到 %s 节点的 devices 属性" % (adt_path, node))
 
 
+def show_ps_groups(adt_path: str, node: str = "pmgr") -> int:
+    """打印 `ps-groups`(基址索引表)与 pmgr 的 `reg`。
+
+    设备记录里的 group 字段索引这张表,拿到 (reg_idx, reg_offset),
+    再去 pmgr 的 `reg` 属性里取第 reg_idx 条地址 —— 这就是**基址**。
+
+    ⚠️ `reg` 的 cell 划分没定论:本机 864 字节,按 2 cell 解是 108 条、
+    按 4 cell 解是 54 条,两种解出的第一个地址都含 0x70700000(pmgr 自己的
+    节点地址),所以还没法靠数据分辨。需要真机或父节点的 #address-cells。
+    """
+    root = adtlib.load(adt_path)
+    p = next(root.find(node))
+
+    g = p.props.get("ps-groups")
+    if not isinstance(g, (bytes, bytearray)) or len(g) % 12:
+        print("没找到形状正确的 ps-groups", file=sys.stderr)
+        return 1
+
+    print("ps-groups(%d 字节,%d 组):" % (len(g), len(g) // 12))
+    for i in range(len(g) // 12):
+        a, b, c = struct.unpack_from("<III", g, i * 12)
+        print("  group %d:  reg_idx=%-4d reg_offset=0x%-6x unk=0x%x" % (i, a, b, c))
+
+    r = p.props.get("reg")
+    if isinstance(r, (bytes, bytearray)):
+        print()
+        print("pmgr reg(%d 字节):" % len(r))
+        for cells in (2, 4):
+            print("  按 %d cell/条 解 -> %d 条" % (cells, len(r) // (cells * 4)))
+        print("  前 4 条的原始 cell(小端 u32):")
+        for i in range(0, min(len(r), 64), 4):
+            print("    [%2d] 0x%08x" % (i // 4, struct.unpack_from("<I", r, i)[0]))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("adt", nargs="?", help="ADT 输入(ioreg plist 或 FDT blob)")
     ap.add_argument("--blob", help="直接给 devices 二进制文件")
     ap.add_argument("--tsv", action="store_true", help="TSV 输出")
+    ap.add_argument("--ps-groups", action="store_true",
+                    help="打印 ps-groups(基址索引表)与 pmgr reg,不解 devices")
     args = ap.parse_args()
+
+    if args.ps_groups:
+        if not args.adt:
+            ap.error("--ps-groups 需要 adt")
+        return show_ps_groups(args.adt)
 
     if args.blob:
         blob = Path(args.blob).read_bytes()

@@ -73,10 +73,14 @@ def sha256(path: str) -> str:
 def emit(template: dict, m5: list, tpl_name: str, tpl_hash: str) -> str:
     from collections import Counter
 
-    cnt = Counter(r["f16_offset"] for r in m5)
-    unique = sorted((r for r in m5 if cnt[r["f16_offset"]] == 1),
+    # 虚拟域(flags & 0x10)没有真实寄存器,不进 DTS
+    real = [r for r in m5 if not r["virtual"]]
+    virt = [r for r in m5 if r["virtual"]]
+
+    cnt = Counter(r["f16_offset"] for r in real)
+    unique = sorted((r for r in real if cnt[r["f16_offset"]] == 1),
                     key=lambda x: x["f16_offset"])
-    dup = sorted((r for r in m5 if cnt[r["f16_offset"]] > 1),
+    dup = sorted((r for r in real if cnt[r["f16_offset"]] > 1),
                  key=lambda x: (x["f16_offset"], x["name"]))
 
     matched = [r for r in unique if r["name"].lower() in template]
@@ -95,10 +99,14 @@ def emit(template: dict, m5: list, tpl_name: str, tpl_hash: str) -> str:
         " *",
         " * ⚠️ 草稿。必须人工校对 + 真机验证。见 docs/PMGR-DELTA.md。",
         " *",
-        " * 只写出了**偏移唯一**的条目(%d 条),因为:" % len(unique),
-        " *   387 条里有 %d 条的偏移与其他条目重复(最多的是偏移 0,共 86 条)。" % len(dup),
-        " *   绝对地址显然还要一个基址,而基址从哪来**未知** —— 直接写进 DTS 会撞车。",
-        " *   那批条目列在文件末尾的注释块里,等真机实验定出基址再处理。",
+        " * 记录 %d 条:非虚拟 %d 条,其中偏移唯一、写出为节点的 %d 条。"
+        % (len(m5), len(real), len(unique)),
+        " *",
+        " * 地址结构:**绝对地址 = base(group) + offset**",
+        " *   base 由 pmgr 的 ps-groups 表索引 reg 属性得到,本机三组分别是",
+        " *   0x170700000 / 0x178280000 / 0x370e80000。",
+        " *",
+        " * 未写出的(%d 条偏移仍不唯一 + %d 条虚拟域)见文件末尾两个注释块。" % (len(dup), len(virt)),
         " */",
         "",
         "&pmgr {",
@@ -132,24 +140,37 @@ def emit(template: dict, m5: list, tpl_name: str, tpl_hash: str) -> str:
             L.append("\t};")
         L.append("")
 
+    L += ["};", ""]
+
+    if dup:
+        L += [
+            "/*",
+            " * ====== 未写出:偏移在非虚拟域里仍不唯一(%d 条)======" % len(dup),
+            " *",
+            " * 绝对地址 = base(group) + offset,base 来自 pmgr 的 ps-groups × reg。",
+            " * 这几条的 (group, offset) 不同但 offset 相同,而 DT 的节点名单元地址",
+            " * 用的是 offset(M4 的写法),会撞车。等定清 pmgr 的 ranges 怎么表达多基址再说。",
+            " * 格式: offset  group  id  名字",
+            " *",
+        ]
+        for r in dup:
+            L.append(" *  0x%05x  g=%d  id=%-4d  %s"
+                     % (r["f16_offset"], r["f16_group"], r["id"], r["name"]))
+        L += [" */", ""]
+
     L += [
-        "};",
-        "",
         "/*",
-        " * ============ 以下条目**未**写出,偏移与其他条目重复 ============",
+        " * ====== 虚拟域(flags 带 0x10),本文件不处理(%d 条)======" % len(virt),
         " *",
-        " * 偏移重复说明绝对地址还缺一个基址。定出基址之前不要动这些。",
-        " * 格式: 偏移  设备号  名字",
+        " * 这些没有真实寄存器,是 PMGR 合成的状态域。是否需要在 DTS 里表达、",
+        " * 以及怎么表达,未知 —— 上游 M4 的 dtsi 里也没有对应写法可参考。",
+        " * 格式: offset  group  id  名字",
         " *",
     ]
-    for r in dup:
-        L.append(" *  0x%05x  id=%-4d  %s" % (r["f16_offset"], r["id"], r["name"]))
-    L += [
-        " *",
-        " * 合计 %d 条。" % len(dup),
-        " */",
-        "",
-    ]
+    for r in virt:
+        L.append(" *  0x%05x  g=%d  id=%-4d  %s"
+                 % (r["f16_offset"], r["f16_group"], r["id"], r["name"]))
+    L += [" */", ""]
 
     return "\n".join(L)
 
