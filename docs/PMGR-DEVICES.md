@@ -1,5 +1,26 @@
 # PMGR `devices` 属性 —— 结构解码
 
+> # 🚨 2026-10-11 更正:字段名**全是猜的**,真名在原始 ADT 里
+>
+> 本文的字段名(`f16_offset` / `f00` / `id` …)是我从 **ioreg 的扁平化二进制**
+> 里反推的。**拿到原始 ADT 后发现:它的 `devices` 是带完整字段名的结构**,
+> 真名一直躺在那儿:
+>
+> | 我猜的 | **真名** |
+> |---|---|
+> | `f16_offset` | **`offset`** |
+> | `f16_group` | **`group`** |
+> | `id` | **`id2`**(另有 `id1`) |
+> | `f00`(当作标志合值) | **`flags`**,带命名位 `perf` `no_ps` `critical` `notify_pmp` `on` |
+> | (没发现) | **`psreg`**、`psidx`、`pd`、`ps_cfg16`、`perf_idx` |
+>
+> `ps-groups` 的第三格我标"未知",真名是 **`mask`**。
+>
+> **结构结论(387 条 × 48 字节、名字在 +32、地址 = base(group) + offset)仍然有效** ——
+> 那是从数据量出来的,不是猜的。**作废的只是字段命名。**
+>
+> 详见 [M5-PRIOR-ART.md §10](M5-PRIOR-ART.md)。
+
 把 `/arm-io/pmgr` 节点的 `devices` 二进制属性(本机 18576 字节)解出来的结果。
 
 工具:[`tools/pmgr_devices.py`](../tools/pmgr_devices.py)。
