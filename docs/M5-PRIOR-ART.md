@@ -386,3 +386,55 @@ Linux 认 `apple,t8122-aic3`)。
 | `docs/hw/soc/aic.md` | **AIC 寄存器笔记**(SET/CLR 风格、IPI 流程) |
 | `docs/hw/cpu/apple-instructions.md` | CPU 指令 |
 | `docs/platform/feature-support/overview.md` | 全世代对照 |
+
+
+---
+
+## 10 ⭐ 原始 ADT 里的 `devices` 是**结构化的**(字段名都在)
+
+**我之前的 PMGR 分析是在解构一个扁平化形式**,把字段名标成"未知/猜测"。
+**原始 ADT 里字段名一直躺着。**
+
+### 10.1 真字段名
+
+```
+Container: flags = Container: b7=False b6=False perf=False no_ps=False
+                              critical=False b2=False notify_pmp=False on=False
+           unk1_0=0  unk1_1=2  id1=0
+           parents_un = Container: u8id/unk_u8id/u16id ...
+           perf_idx=0  perf_block=0
+           psidx=0  psreg=0
+           unk2_0=1  pd=0  ps_cfg16=0
+           offset=0  group=0
+           unk2_2=0  unk2_3=0
+           id2=1  unk3=0  name = u'ECPU_0'
+```
+
+| 我猜的 | **真名** |
+|---|---|
+| `f16_offset` | **`offset`** |
+| `f16_group` | **`group`** |
+| `id` | **`id2`**(与 `id1` 并列) |
+| `f00`(当标志合值) | **`flags`**,位有名字:`perf` `no_ps` `critical` `notify_pmp` `on` |
+| (没发现) | **`psreg`**、`psidx`、`pd`、`ps_cfg16`、`perf_idx`、`perf_block` |
+
+`ps-groups` 的第三格真名是 **`mask`**(我标了"未知")。
+
+### 10.2 用原始 ADT 重验 PMGR 对比 —— **旧结论成立**
+
+| | 数量 |
+|---|---|
+| M4 的 DTS 条目 | 129 |
+| M5 原始 ADT 里有名字的 | 386 |
+| 名字重合 | 119(92%) |
+| **同名 + 同 `offset`** | **8(6%)** |
+| 只有 M4 有 | 10 |
+
+**和当初从 ioreg 算出来的数字一模一样。** 所以:
+- `PMGR-DELTA` 的"92% / 6%"成立
+- `DTS-BACKLOG §6.4` 里"证据被削弱"那句**多余,已改回**
+
+### 10.3 待查的小出入
+
+ioreg 解出 **387** 条,原始 ADT 的文本解出 **386** 条。差 1。
+大概率是我的文本切分丢了一条,**待核**。
