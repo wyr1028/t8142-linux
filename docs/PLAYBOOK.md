@@ -42,39 +42,104 @@
 
 ## 阶段 1(M0)· 第二台机器就位
 
+### 1.0 ⚠️ 装 Linux **之前**,先在 Windows 里查这五件
+
+**跳过这一步的代价可能是丢掉游戏本上的数据。** 按顺序来。
+
+#### ① BitLocker —— 最要命的一条
+
+```powershell
+# 管理员 PowerShell
+manage-bde -status
+```
+
+- 显示 **Protection On** → **先把恢复密钥抄下来并验证能读出来**:
+  ```powershell
+  manage-bde -protectors -get C:
+  ```
+  密钥通常也在 https://account.microsoft.com/devices/recoverykey
+- **没有密钥就不要动分区表。** 改分区 / 关 Secure Boot 都可能触发"请输入恢复密钥",
+  没密钥 = 数据全丢
+
+#### ② 硬盘是不是 RAID / Intel RST 模式 —— 游戏本高发
+
+看设备管理器的存储控制器,或 BIOS 里的 SATA/NVMe 模式。
+
+- 是 RST/VMD → **Ubuntu 安装程序根本看不到硬盘**
+- 正确的切法(**先在 Windows 里**):
+  ```powershell
+  bcdedit /set {current} safeboot minimal
+  ```
+  重启进 BIOS 改成 AHCI → 进 Windows → 再:
+  ```powershell
+  bcdedit /deletevalue {current} safeboot
+  ```
+  ⚠️ **别在 BIOS 里直接改**,顺序反了 Windows 会起不来。
+
+#### ③ 关掉「快速启动」
+
+控制面板 → 电源选项 → 选择电源按钮的功能 → 更改当前不可用的设置 → 取消勾选「启用快速启动」
+
+> 不关的话 Windows 分区处于"脏"状态,Linux 可能拒绝挂载。
+
+#### ④ 备份游戏本
+
+至少把重要文件拷出来。这一步不能省。
+
+#### ⑤ 腾磁盘
+
+Windows「磁盘管理」压缩卷,腾出 **60~80 GB 未分配**。
+
+> ⚠️ **用 Windows 自己的工具缩,别在 Linux 安装程序里缩 Windows 分区。**
+
+---
+
 ### 1.1 装工具链
 
-**Debian / Ubuntu:**
+**Ubuntu(你的情况):**
 
 ```bash
 sudo apt update
 sudo apt install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
-                 make git python3 python3-pip picocom libusb-1.0-0-dev
+                 make git python3 python3-pip picocom libusb-1.0-0-dev usbutils
+
+# m1n1 有 Rust 部分 —— 下面这条 apt 装不到,必须走 rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup target add aarch64-unknown-none-softfloat
 ```
 
 **Fedora:**
 
 ```bash
 sudo dnf install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
-                 make git python3 picocom libusb1-devel
+                 make git python3 picocom libusb1-devel usbutils
+# Rust 同上
 ```
 
 **Apple Silicon Mac(原生编译,不需要交叉工具链):**
 
 ```bash
 brew install make python3
-rustup target add aarch64-unknown-none-softfloat   # m1n1 有 Rust 部分
+rustup target add aarch64-unknown-none-softfloat
 ```
 
-### 1.2 判据
+> ⚠️ **三个容易漏的**:
+> - **Rust 部分** —— m1n1 已经不全是 C 了,那个 target apt/dnf 里没有
+> - **udev 规则** —— 装完 m1n1 后按它的 README 装,否则 USB 访问被拒
+> - 拉源码记得 `git clone --recursive`(有子模块)
+
+### 1.2 判据 —— 跑自检脚本
 
 ```bash
-aarch64-linux-gnu-gcc --version    # Linux
-# 或 Mac 上:
-rustup target list --installed | grep none-softfloat
+bash tools/check_host.sh
 ```
 
-**两条都通不了就停下**,先解决这两个,别往下走。
+逐项检查上面那些东西(含容易漏的 Rust target、libusb 头文件、磁盘空间),
+缺哪项直接给出安装命令。**全绿才继续。**
+
+> 为什么要脚本而不是几个 `--version`:从"系统装好"到"敢动 M5 的 boot policy"
+> 之间,有一堆"以为装好了其实没有"的东西。**先把主机验干净,再去碰目标机** ——
+> 这是最省时间的顺序。
 
 ### 1.3 插上 USB-C 线,确认不是哑线
 

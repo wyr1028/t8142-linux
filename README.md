@@ -62,6 +62,7 @@ tools/
   pmgr_devices.py    PMGR `devices` 属性解码(387 条电源域)
   pmgr_join.py       M4 结构 + M5 数值 → t8142-pmgr.dtsi 草稿
   scrub_adt.py       洗敏感字段 + 发布前自查(--verify)
+  check_host.sh      在 Linux 主机上跑的自检(装完系统后验一遍)
 dts/
   t8142-pmgr.dtsi    生成的草稿(255 条;dtc 编译通过)
 tests/
