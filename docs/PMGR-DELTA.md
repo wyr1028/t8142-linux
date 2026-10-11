@@ -148,8 +148,15 @@ gpio / sep / venc_dma / venc_pipe4 / venc_pipe5 / venc_me0 / venc_me1 / disp_cpu
 1. 还有 3 组 offset 撞车(6 条)—— `(group,offset)` 不同但 offset 相同,
    而 DT 节点名用的是 offset。等定清 **pmgr 的 `ranges` 怎么表达多基址**
 2. **人工校对**那 268 条"M4 模板里没有的"
-3. 名字对不上不等于设备没了 —— M4 的 18 个独有名(`dwi` `dpa0..4` `dptx_phy` …)
-   可能只是改名了
+3. ~~名字对不上不等于设备没了~~ —— **已查**(2026-10-11):
+
+   M4 那 18 个独有名里:
+   - **10 个只是变成了虚拟域**(`afiaft` `debug_switch` `dptx_phy` `fpwm1`
+     `nub_ocla` `nub_sram` `pmgr_soc_ocla` `trace_fab` …)—— 设备还在,性质变了
+   - **10 个真不见了或改了名**:`ane_base` `ane_td` `dpa0..4` `dpa_p` `dwi` `nub_spi0`
+     (注意 M5 有个 `ane_tdbase`,像是 `ane_td` 改名)
+
+   所以真正需要人工查的从 18 个降到 **约 10 个**。
 
 ---
 
