@@ -53,6 +53,7 @@ docs/
   PMGR-DEVICES.md    PMGR `devices` 属性的结构解码(含来源诚实说明)
   PMGR-DELTA.md      M5 vs M4 的 PMGR 差异 —— 回答"几个月还是几年"
   STATUS.md          一页看完:到哪了 / 卡在哪 / 下一步
+  DTS-BACKLOG.md     M4 到底做了多少(440 行)/ M5 缺什么 / 三个格式问题
 tools/
   adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点
