@@ -17,9 +17,16 @@ u-boot/
 *-adt.plist
 *.plist
 raw-adt*
+m5_own_adt*
 *.dtb
 serial.txt
 dumps/
+
+# ADT 的文本解码 —— 从 Apple 固件派生,按 LEGAL.md「不分发固件」的纪律不进版本库。
+# (已核实文本里没有真序列号,但派生自固件 blob,保守处理。)
+adt.txt
+*_adt.txt
+our_adt.txt
 
 # Python
 __pycache__/
