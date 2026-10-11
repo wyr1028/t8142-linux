@@ -1,4 +1,4 @@
-# m5linux
+# m5-linux
 
 在 Apple M5 上运行 Linux 的**独立**移植项目。
 
