@@ -97,7 +97,7 @@ Windows「磁盘管理」压缩卷,腾出 **60~80 GB 未分配**。
 
 ---
 
-### 1.0b 装哪一版 Ubuntu —— **Desktop,不是 Server**
+### 1.1 装哪一版 Ubuntu —— **Desktop,不是 Server**
 
 ⚠️ 校园网认证走 **深澜 Srun + 统一身份认证(SSO)**,认证页是 **JS 提交**的
 (`/v1/srun_portal_sso`),不是简单的表单 POST。
@@ -128,7 +128,7 @@ Linux 用同一个 MAC **可能不用重新认证**。通了就什么都不用�
 
 ---
 
-### 1.1 装工具链
+### 1.2 装工具链
 
 **Ubuntu(你的情况):**
 
@@ -162,6 +162,28 @@ rustup target add aarch64-unknown-none-softfloat
 > - **udev 规则** —— 装完 m1n1 后按它的 README 装,否则 USB 访问被拒
 > - 拉源码记得 `git clone --recursive`(有子模块)
 
+### 1.3 判据 —— 跑自检脚本
+
+```bash
+bash tools/check_host.sh
+```
+
+逐项检查上面那些东西(含容易漏的 Rust target、libusb 头文件、磁盘空间),
+缺哪项直接给出安装命令。**全绿才继续。**
+
+> 为什么要脚本而不是几个 `--version`:从"系统装好"到"敢动 M5 的 boot policy"
+> 之间,有一堆"以为装好了其实没有"的东西。**先把主机验干净,再去碰目标机** ——
+> 这是最省时间的顺序。
+
+### 1.4 插上 USB-C 线,确认不是哑线
+
+```bash
+lsusb                              # Linux
+```
+插拔 M5 侧(此时 M5 正常开机的 macOS 状态),看 `lsusb` 有没有变化。没变化 → 换线。
+
+---
+
 ### 1.5 ⚠️ 外接机械盘在 Recovery 里认不到 —— 拔插解法
 
 **实测踩过的坑(2026-10-11)**:USB 供电的 2.5 寸机械盘,**在恢复环境里认不到**。
@@ -183,28 +205,6 @@ rustup target add aarch64-unknown-none-softfloat
 
 > 🚨 **危险提醒**:走到「从 Time Machine 备份恢复」并**选中**备份、继续下一步,
 > 会**擦掉目标机**。这个流程只用来"看它认不认",看到列表就退出。
-
----
-
-### 1.2 判据 —— 跑自检脚本
-
-```bash
-bash tools/check_host.sh
-```
-
-逐项检查上面那些东西(含容易漏的 Rust target、libusb 头文件、磁盘空间),
-缺哪项直接给出安装命令。**全绿才继续。**
-
-> 为什么要脚本而不是几个 `--version`:从"系统装好"到"敢动 M5 的 boot policy"
-> 之间,有一堆"以为装好了其实没有"的东西。**先把主机验干净,再去碰目标机** ——
-> 这是最省时间的顺序。
-
-### 1.3 插上 USB-C 线,确认不是哑线
-
-```bash
-lsusb                              # Linux
-```
-插拔 M5 侧(此时 M5 正常开机的 macOS 状态),看 `lsusb` 有没有变化。没变化 → 换线。
 
 ---
 
