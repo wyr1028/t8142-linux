@@ -53,6 +53,11 @@
 | 2026-10-11 | M5 与 M4 的电源域**名字重合 119/129(92%)** | 推导 | 上述 dtsi 的 `label` ⋈ `tools/pmgr_devices.py` 解出的名字 | ✅ |
 | 2026-10-11 | M5 与 M4 的**偏移仅 8/129 相同(6%)** —— 视频编码器等整块未动,其余重新布线 | 推导 | 同上,`reg` ⋈ 偏移字段 | ✅ |
 | 2026-10-11 | 结论:**结构可复用、数值需重算且机械可做 → 月级** | 推导 | [PMGR-DELTA.md](PMGR-DELTA.md) | ⚠️ 待真机验证 |
+| 2026-10-11 | M4 的整套 Linux 支持 = `t8132.dtsi` 440 行 + pmgr 1125 行 + 板级 48+35 行;**不含任何外设** | 公开 | `AsahiLinux/linux` 分支 asahi,`t8132.dtsi` / `t8132-jxxx.dtsi` / `t8132-j713.dts` | ✅ |
+| 2026-10-11 | M4 的 DT 要的 14 个节点(pmgr/aic/wdt/pinctrl×4/i2c×5/fpwm/serial)在 M5 的 ADT 里**一个不缺**,地址尺寸全有 | 推导 | 上述 DT 节点表 ⋈ `~/m5-adt.plist` | ✅ |
+| 2026-10-11 | **ADT 的 `interrupts` 属性里那个 u32 就是 AIC 中断号** —— 8 个节点的中断个数与连号区间全部与 M4 的 DT 吻合 | 推导 | 同上;见 [DTS-BACKLOG §3.3](DTS-BACKLOG.md) | ✅ |
+| 2026-10-11 | **ADT reg 是 `(lo, hi, size_lo, size_hi)`,DT 要 `(hi, lo, size_hi, size_lo)`** —— 两侧 cell 顺序相反、值一一对应;aic 尺寸 `0x1cc000` 两边完全一致 | 推导 | 同上 §3.1 | ⚠️ 推断,待真机验证 |
+| 2026-10-11 | M4 外设空间在 `0x3_8xxxxxxx`,M5 在 `0x1_7xxxxxxx`(两侧高位各自为常量) | 推导 | 同上 §3.1 | ⚠️ 推断 |
 
 ---
 
