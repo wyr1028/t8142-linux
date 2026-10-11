@@ -48,6 +48,7 @@ docs/
   HARDWARE.md        M5/J704 硬件事实(每条带来源与置信度)
   PROVENANCE.md      来源日志 —— 本项目最重要的合规资产
   PLAYBOOK.md        M0→M7 操作手册,每步带命令与判据
+  M1-RUNBOOK.md      M1(点亮 m1n1)的逐条手册 —— 会动 boot policy 的那步
   RISKS.md           实操风险:机器 / 数据 / 时间(讲技术,不讲法律)
   DEPENDENCIES.md    依赖侵权审查:每个外部依赖的许可证与风险
   PMGR-DEVICES.md    PMGR `devices` 属性的结构解码(含来源诚实说明)
