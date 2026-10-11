@@ -2,6 +2,10 @@
 /*
  * PMGR Power domains for the Apple T8142 "M5" SoC — 草稿
  *
+ * ⚠️ 本文件是上游对应文件的**衍生作品**,依 GPL 保留署名:
+ *     Copyright The Asahi Linux Contributors
+ *     上游以 "GPL-2.0+ OR MIT" 发布;本文件选择 GPL-2.0-or-later
+ *
  * 由 tools/pmgr_join.py 生成,输入:
  *   模板: t8132-pmgr.dtsi  (sha256 17c4fd5a7ec04af6)
  *       上游 AsahiLinux/linux, arch/arm64/boot/dts/apple/t8132-pmgr.dtsi

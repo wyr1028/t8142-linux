@@ -2,7 +2,11 @@
 /*
  * Apple T8142 "M5" SoC — 草稿
  *
- * 由 t8132.dtsi(M4)改造而来。本项目与上游无关,见 docs/LEGAL.md。
+ * ⚠️ 本文件是 AsahiLinux/linux 的 t8132.dtsi(M4)的**衍生作品**,依 GPL 保留上游署名:
+ *     Copyright The Asahi Linux Contributors
+ *     上游该文件以 "GPL-2.0+ OR MIT" 发布;本文件选择 GPL-2.0-or-later
+ *
+ * 本项目是**独立分支**:与上游无关,不向其提交任何内容,见 docs/LEGAL.md。
  *
  * ═══ 数据来源 ═══
  *   结构  : 上游 AsahiLinux/linux 的 t8132.dtsi(公开 GPL,读取已获授权)
