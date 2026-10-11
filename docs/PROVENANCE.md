@@ -35,7 +35,7 @@
 | 2026-10-11 | m1n1 对 M5 的支持范围(SoC id / UART base / MIDR / SMP) | 公开 | `AsahiLinux/m1n1` HEAD `7f20877` 源码:`soc.h` `midr.h` `chickens.c` `smp.c` | ✅ |
 | 2026-10-11 | PR #629 `Initial support for T8142`(2026-07-19 合并) | 公开 | GitHub API `repos/AsahiLinux/m1n1/pulls/629` | ✅ |
 | 2026-10-11 | PR #578 pmgr 覆盖 M4 Pro/Max、A18 Pro、M5 | 公开 | GitHub API `.../pulls/578` | ✅ |
-| 2026-10-11 | m1n1 中 M5 未引用的 25 个 compatible | 推导 | 真机 ADT compatible 集 △ 公开源码字面量集;差集脚本可重跑 | ✅ |
+| 2026-10-11 | ~~m1n1 中 M5 未引用的 25 个 compatible~~(见下一行更正) | 推导 | 真机 ADT compatible 集 △ 公开源码字面量集;差集脚本可重跑 | ✅ |
 | 2026-10-11 | M4 设备树规模(`t8132.dtsi` 440 行 / `t8132-pmgr.dtsi` 1125 行 / 129 power-state) | 公开 | GitHub API `repos/AsahiLinux/linux/contents/arch/arm64/boot/dts/apple/`(分支 `asahi`) | ✅ |
 | 2026-10-11 | M4 核 compatible = `apple,donan-e` / `apple,donan-p` | 公开 | 同上,`t8132.dtsi` | ✅ |
 | 2026-10-11 | M5(`t8142`)在 Linux DTS 中不存在 | 公开 | 同上,目录列表无 `t8142*` | ✅ |

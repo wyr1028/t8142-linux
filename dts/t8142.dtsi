@@ -26,6 +26,20 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/pinctrl/apple.h>
 
+/*
+ * 🚨🚨 地址警告:本文件里的地址是 **ADT 的子(bus)地址,未加翻译**。
+ *      设备树要的是**物理地址** = 子地址 + `0x2_1000_0000`
+ *      (来自 `arm-io` 的 `ranges` 第一条)。
+ *
+ *      例:`pmgr@170700000` 其实是 `0x3_80700000`。
+ *
+ *  正确数值请看 docs/M5-MEMMAP.md(已交叉验证)。
+ *  本文件的价值在**结构**(哪些节点、什么属性),不在数值。
+ *
+ *  另:上游已有人写过两份 M5 设备树(其中一份能启动),
+ *  真要用请先对照,别直接拿这份。
+ */
+
 / {
 	compatible = "apple,t8142", "apple,arm-platform";
 
