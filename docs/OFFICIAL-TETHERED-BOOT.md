@@ -156,3 +156,103 @@ tools/run_guest_kernel.sh /path/to/linux/build/dir 'earlycon rootwait root=...' 
 - target:Apple Silicon Mac,**macOS ≥ 12.3**,有**密码保护的管理员账号**
 - host:任意架构的 GNU/Linux(macOS 也支持但"less well tested")
 - Python ≥ 3.9
+
+---
+
+# 附:m1n1 User Guide 补充(官方 `docs/sw/m1n1-user-guide.md`)
+
+## A ⭐ `kmutil.py` —— 解决"文件怎么进 1TR"
+
+**这是我一直担心的那个问题**(recoveryOS 读不到 Mac 上的文件)。
+
+m1n1 自带一个 **webserver 脚本**,把二进制和 kmutil 命令打包成一个脚本:
+
+```bash
+# 主机上
+./scripts/kmutil.py
+
+# 目标的 1TR 里
+sh <(curl HOST:8000)
+```
+
+> ⚠️ **不能用管道**(`curl ... | sh`)—— 它要靠 stdin。
+> 而且还省掉了 U 盘。
+
+## B ⚠️ 环境变量:官方说是 `M1N1DEVICE`
+
+官方原文:
+
+> a Linux host will see **two** USB TTY ACM devices, typically `/dev/ttyACM0` & `/dev/ttyACM1`...
+> **You should set the `M1N1DEVICE` environment variable** to the path to the right device.
+
+| 设备 | 用途 |
+|---|---|
+| `/dev/ttyACM0` | **proxy 接口** ← `M1N1DEVICE` 指向它 |
+| `/dev/ttyACM1` | hypervisor 的**虚拟 UART** |
+
+> ImAtomiskk 的笔记写的是 `M1N1_PORT` —— 可能是不同 m1n1 版本的差异。
+> **两个都试,哪个管用用哪个。**
+
+## C 关掉 backdoor 和复位
+
+```bash
+nvram boot-args=          # 关掉 verbose
+csrutil enable            # 复位 boot policy
+```
+
+> 🚨 **复位时不要选"启用完整安全" —— 那会把 m1n1 卸掉。**
+
+## D 打断进 proxy 的精确条件
+
+> **proxy 后门要求 verbose(`boot-args=-v`)AND SIP 关闭(`csrutil disable`)两个都满足。**
+> 只开 verbose 可能给 m1n1 的调试输出,但**不会**开后门(新版本出于安全考虑)。
+
+主机侧要**打开那个 USB ACM 设备**才算触发。官方给的做法:
+
+```bash
+while true; do
+    while [ ! -e /dev/ttyACM1 ]; do sleep 1; done
+    picocom --omap crlf --imap lfcrlf -b 500000 /dev/ttyACM1
+    sleep 1
+done
+```
+
+连上之后再 `M1N1DEVICE=/dev/ttyACM0` 跑 proxy 脚本。
+
+## E macOS 上编译的官方依赖(和 ImAtomiskk 说的不同)
+
+```bash
+brew install llvm imagemagick
+make
+```
+
+> **要装机 imagemagick 的 `convert`** —— m1n1 用它生成启动 logo。
+> (ImAtomiskk 写的是 `gcc-aarch64-embedded`,两套都记着。)
+
+## F 构建开关
+
+| 开关 | 作用 |
+|---|---|
+| `make RELEASE=1` | release 行为:默认隐藏控制台 + 提供早期 proxy 模式的逃生口 |
+| `make CHAINLOADING=1` | 支持 chainload,**需要 Rust nightly** |
+
+> 官方安装器装的 stage 1 release **两个都开了**。
+
+## G 端口:proxy 在**所有雷雳口**上都有
+
+> "Proxy mode provides a USB device interface (**available on all Thunderbolt ports**)"
+
+**和物理调试串口不一样** —— 那个只在 DFU 口(后左)。**别搞混。**
+
+## H 没有 payload 时自动进 proxy
+
+> "If given no payloads, or if booting the payloads fails, m1n1 will **fall back to proxy mode**."
+
+所以第一次装上去、什么 payload 都不带的话,它直接就进 proxy 模式 —— **正好是我们要的。**
+
+## I 其它可用工具
+
+```bash
+proxyclient/tools/chainload.py -r build/m1n1.bin      # 换一个 m1n1 进去
+proxyclient/tools/run_guest_kernel.sh <build根> '参数' [initramfs]
+```
