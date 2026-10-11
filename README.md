@@ -32,7 +32,8 @@
 |---|---|
 | [LEGAL.md](LEGAL.md) | **动手前必读** —— 红线、黄线、绿线 |
 | [AI-USAGE.md](AI-USAGE.md) | AI 使用声明 |
-| [ROADMAP.md](ROADMAP.md) | 工作清单 |
+| [ROADMAP.md](ROADMAP.md) | 工作清单(要做什么) |
+| [docs/PLAYBOOK.md](docs/PLAYBOOK.md) | 操作手册(具体怎么做,命令级) |
 
 ## 目录
 
@@ -45,7 +46,7 @@ LICENSE              待补(GPL-2.0-or-later)
 docs/
   HARDWARE.md        M5/J704 硬件事实(每条带来源与置信度)
   PROVENANCE.md      来源日志 —— 本项目最重要的合规资产
-  TETHERED-BOOT.md   上机手册(待写)
+  PLAYBOOK.md        M0→M7 操作手册,每步带命令与判据
 tools/
   adtlib.py           ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py          ADT → DTS 骨架生成器
