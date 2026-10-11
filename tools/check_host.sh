@@ -82,10 +82,11 @@ chk "rust target aarch64-unknown-none-softfloat" \
     "rustup target add aarch64-unknown-none-softfloat"
 
 echo
-echo "═══ USB(libusb 开发头文件 —— 编译 proxyclient 要用)═══"
-chk "libusb-1.0 开发包" \
-    "pkg-config --exists libusb-1.0" \
-    "sudo apt install libusb-1.0-0-dev"
+echo "═══ USB ═══"
+# 注:之前这里把 libusb 当必需项 —— 查过 m1n1 仓库,**它一处都没引用 libusb**
+# (proxyclient 走 pyserial 读 ttyACM,不经 libusb)。所以不做硬性检查。
+printf "  ${Y}注${N}: m1n1 proxyclient 用 pyserial 读 /dev/ttyACM*,不需要 libusb。\n"
+printf "      若某个脚本报缺 libusb,再 sudo apt install libusb-1.0-0-dev 不迟。\n"
 
 if [ -d /sys/class/typec ] && [ -n "$(ls -A /sys/class/typec 2>/dev/null)" ]; then
     printf "  ${G}✓${N} 检测到 USB-C 控制器\n"; ok=$((ok+1))

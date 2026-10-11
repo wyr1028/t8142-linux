@@ -49,6 +49,10 @@
 | 2026-10-11 | `devices` 偏移 16 = 24 位寄存器偏移(**步长 8**)+ 8 位 group(本机 group ∈ {0,1,2}) | 真机 | 同上 | ✅ |
 | 2026-10-11 | `devices` 偏移 26 = 设备号,范围 **1..561** 且**稀疏** | 真机 | 同上 | ✅ |
 | 2026-10-11 | 字段**命名**(如 `psreg_idx`)受上游源码提示,**非**独立推出 | 见上节 | — | ❌ |
+| 2026-10-11 | **逐个核对**:ioreg 那 48 字节模型解出的 `offset`/`group`/`id2`,与**原始 ADT 的真字段**比对 —— **387/387 全部相同** | 推导 | `pmgr_devices.py` ⟷ `adt_txt.py` 解出的 `our_adt.txt` | ✅ |
+| 2026-10-11 | **compatible 差集换用自己 ADT 重算**:t8142 新增 **25 条不变**;总数 39→40(固件差 1 条) | 推导 | 同上 | ✅ |
+| 2026-10-11 | **Rust 是必需依赖**(Makefile 的 `BUILD_ALL_OBJS` 无条件含 Rust 库) —— 官方 user guide 那句"stage 2 不需要 Rust"**已过时** | 公开 | `AsahiLinux/m1n1` 的 `Makefile` / `README.md` | ✅ |
+| 2026-10-11 | **libusb 不需要** —— m1n1 全仓库零处引用 | 公开 | 同上,`grep -rl libusb` | ✅ |
 | 2026-10-11 | M4 的 `t8132-pmgr.dtsi` 有 **129 条** `power-controller@<偏移>`,带 `reg` 与 `label` | 公开 | `AsahiLinux/linux`(分支 asahi)`arch/arm64/boot/dts/apple/t8132-pmgr.dtsi`,**读取已获所有者授权** | ✅ |
 | 2026-10-11 | M5 与 M4 的电源域**名字重合 119/129(92%)** | 推导 | 上述 dtsi 的 `label` ⋈ `tools/pmgr_devices.py` 解出的名字 | ✅ |
 | 2026-10-11 | M5 与 M4 的**偏移仅 8/129 相同(6%)** —— 视频编码器等整块未动,其余重新布线 | 推导 | 同上,`reg` ⋈ 偏移字段 | ✅ |
