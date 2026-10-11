@@ -290,8 +290,12 @@ M5 上只有两个 UART:`uart0 @ 0x3a5200000`、`dockchannel-uart @ 0x388128000`
 
 ### 8.4 `ImAtomiskk/asahim5`
 
-- **m1n1 是 git submodule,指向上游 `AsahiLinux/m1n1`** ——
-  **说明上游 m1n1 原样就能在 J704 上跑**,不需要任何补丁
+- **m1n1 是 git submodule,`.gitmodules` 指向上游 `AsahiLinux/m1n1`**
+  - ⚠️ **但它 pin 的 `131397a9…` 在上游仓库里查不到**(GitHub 返 422)
+  - 所以**不能据此断言"上游原样能跑"**。只能说:上游**有** T8142 的支持代码
+    (PR #629/#578 已合并)—— **但"原样跑通 J704"未验证**
+  - 另:`m1n1-bak/` 是一份完整备份树;`ezbuild.sh` 只 `cp` logo,**没打补丁**;
+    全仓库**没有 .patch/.diff 文件**
 - `dump/` 三份文件(原始 ADT 的 bin / txt / 生成好的 dts)—— **已拿到**
 - `notes/` 八份文档 —— **已全部读进 [M1-RUNBOOK](M1-RUNBOOK.md)**
 
