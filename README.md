@@ -22,7 +22,10 @@
 
 **只看这一节 + [docs/STATUS.md](docs/STATUS.md) 就够了。**
 
-1. `git clone <repo>`(私有仓库,需要账号权限)
+> **两台机器轮流改,不是单向同步。** 每台机器**动手前先 `git pull`**,
+> 做完就 `commit` + `push`。这台推的,那台拉;那台推的,这台拉。
+
+1. `git clone <repo>`(已公开,不需要账号权限)
 2. **读 `docs/STATUS.md`** —— 一页看完:到哪了 / 卡在哪 / 下一步
 3. 读 `docs/PROVENANCE.md` —— **每个技术事实的来源**,接手前必读
 4. 按 `docs/ROADMAP.md` 的 `[ ]` 往下做;具体命令在 `docs/PLAYBOOK.md`
