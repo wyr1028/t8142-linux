@@ -1,0 +1,2366 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * PMGR Power domains for the Apple T8142 "M5" SoC — 草稿
+ *
+ * 由 tools/pmgr_join.py 生成,输入:
+ *   模板: t8132-pmgr.dtsi  (sha256 17c4fd5a7ec04af6)
+ *       上游 AsahiLinux/linux, arch/arm64/boot/dts/apple/t8132-pmgr.dtsi
+ *   数值: 本机 ADT 的 pmgr `devices` 属性(387 条)
+ * 生成日期: 2026-10-11
+ *
+ * ⚠️ 草稿。必须人工校对 + 真机验证。见 docs/PMGR-DELTA.md。
+ *
+ * 只写出了**偏移唯一**的条目(255 条),因为:
+ *   387 条里有 132 条的偏移与其他条目重复(最多的是偏移 0,共 86 条)。
+ *   绝对地址显然还要一个基址,而基址从哪来**未知** —— 直接写进 DTS 会撞车。
+ *   那批条目列在文件末尾的注释块里,等真机实验定出基址再处理。
+ */
+
+&pmgr {
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpu_1: power-controller@8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpu_1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpu_2: power-controller@10 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpu_2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpu_3: power-controller@18 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x18 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpu_3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpu_4: power-controller@20 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x20 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpu_4";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpu_5: power-controller@28 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x28 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpu_5";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pcpu_0: power-controller@30 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x30 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pcpu_0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pcpu_1: power-controller@38 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x38 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pcpu_1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pcpu_2: power-controller@40 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pcpu_2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pcpu_3: power-controller@48 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x48 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pcpu_3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ecpm: power-controller@50 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x50 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ecpm";
+	};
+
+	ps_nub_spmi0: power-controller@60 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x60 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_spmi0";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_nub_spmi1: power-controller@68 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x68 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_spmi1";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_nub_spmi_a0: power-controller@70 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x70 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_spmi_a0";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_nub_spmi_a1: power-controller@78 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x78 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_spmi_a1";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_aon: power-controller@80 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x80 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_aon";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_aon_nogate: power-controller@88 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x88 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_aon_nogate";
+	};
+
+	ps_nub_ocla: power-controller@90 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x90 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_ocla";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_dock_ch: power-controller@98 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x98 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_dock_ch";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_awl: power-controller@a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xa0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_awl";
+	};
+
+	ps_nub_gpio: power-controller@a8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xa8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_gpio";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_fabric: power-controller@b0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xb0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_fabric";
+	};
+
+	ps_nub_sram: power-controller@b8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xb8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_sram";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_debug_switch: power-controller@c0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "debug_switch";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_atc0_usb_aon: power-controller@c8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_usb_aon";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc0_usb: power-controller@d0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xd0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_usb_aon: power-controller@d8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xd8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_usb_aon";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_usb: power-controller@e0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xe0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_usb_aon: power-controller@e8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xe8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_usb_aon";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_usb: power-controller@f0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xf0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_usb_aon: power-controller@f8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xf8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_usb_aon";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_usb: power-controller@100 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x100 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_sbr: power-controller@108 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x108 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sbr";
+	};
+
+	ps_aic: power-controller@118 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x118 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aic";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_gpio: power-controller@120 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x120 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "gpio";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pms_busif: power-controller@128 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x128 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_busif";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pms: power-controller@130 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x130 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pms_awl: power-controller@138 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x138 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_awl";
+	};
+
+	ps_pmc: power-controller@140 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x140 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pmc";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_fpwm0: power-controller@148 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x148 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_fpwm0";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_fpwm1: power-controller@150 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x150 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_fpwm1";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_fpwm2: power-controller@158 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x158 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_fpwm2";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_fpwm3: power-controller@160 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x160 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_fpwm3";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_fpwm4: power-controller@168 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x168 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_fpwm4";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pms_c1ppt: power-controller@170 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x170 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_c1ppt";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_soc_rc: power-controller@178 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x178 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "soc_rc";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_soc_dpe: power-controller@180 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x180 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "soc_dpe";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_pmgr_soc_ocla: power-controller@188 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x188 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pmgr_soc_ocla";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ispsens0: power-controller@190 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x190 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ispsens0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_ispsens1: power-controller@198 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x198 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ispsens1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_global_aux_ctrl0: power-controller@1a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "global_aux_ctrl0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_global_aux_ctrl1: power-controller@1a8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1a8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "global_aux_ctrl1";
+	};
+
+	ps_ap_tmm: power-controller@1b0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1b0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ap_tmm";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afimccni0: power-controller@1b8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1b8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afimccni0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_piogw: power-controller@1c0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1c0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "piogw";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_amcc0_p0: power-controller@1c8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1c8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "amcc0_p0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_amcc0_p2: power-controller@1d0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1d0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "amcc0_p2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs0: power-controller@1d8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1d8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs1: power-controller@1e0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1e0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs4: power-controller@1e8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1e8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs4";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs5: power-controller@1f0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1f0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs5";
+	};
+
+	ps_afiaft: power-controller@1f8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x1f8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afiaft";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afimccni1: power-controller@200 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x200 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afimccni1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_amcc0_p1: power-controller@208 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x208 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "amcc0_p1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_amcc0_p3: power-controller@210 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x210 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "amcc0_p3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs2: power-controller@218 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x218 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs3: power-controller@220 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x220 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs6: power-controller@228 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x228 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs6";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dcs7: power-controller@230 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x230 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dcs7";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afcmccni0: power-controller@238 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x238 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afcmccni0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afggfxni0: power-controller@240 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x240 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afggfxni0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afins0: power-controller@248 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x248 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afins0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afins1: power-controller@250 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x250 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afins1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afins2: power-controller@258 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x258 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afins2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni0: power-controller@260 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x260 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni1: power-controller@268 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x268 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni2: power-controller@270 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x270 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni3: power-controller@278 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x278 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni4: power-controller@280 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x280 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni4";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_afisocni5: power-controller@288 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x288 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "afisocni5";
+	};
+
+	ps_disp_sys: power-controller@290 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x290 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_sys";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_venc_sys: power-controller@298 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x298 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "venc_sys";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_jpg: power-controller@2a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "jpg";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_msr: power-controller@2a8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2a8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "msr";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_sio: power-controller@2b0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2b0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sio";
+	};
+
+	ps_dispext1_sys: power-controller@2b8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2b8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_sys";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_scodec: power-controller@2c0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2c0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "scodec";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc0_common: power-controller@2c8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2c8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_common";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_common: power-controller@2d0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2d0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_common";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_common: power-controller@2d8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2d8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_common";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_common: power-controller@2e0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2e0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_common";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_ane_sys: power-controller@2e8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2e8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ane_sys";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_apcie_gp: power-controller@2f0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2f0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "apcie_gp";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_isp_sys: power-controller@2f8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x2f8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "isp_sys";
+	};
+
+	ps_ans: power-controller@300 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x300 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "ans";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_dispext0_sys: power-controller@308 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x308 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_sys";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_avd_sys: power-controller@310 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x310 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "avd_sys";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_disp_fe: power-controller@318 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x318 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_fe";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_msr_ase_core: power-controller@320 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x320 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "msr_ase_core";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_sio_cpu: power-controller@328 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x328 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sio_cpu";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_fpwm0: power-controller@330 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x330 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "fpwm0";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_fpwm1: power-controller@338 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x338 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "fpwm1";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_fpwm2: power-controller@340 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x340 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "fpwm2";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c0: power-controller@348 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x348 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c0";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c1: power-controller@350 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x350 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c1";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c2: power-controller@358 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x358 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c2";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c3: power-controller@360 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x360 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c3";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c4: power-controller@368 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x368 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c4";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c5: power-controller@370 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x370 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c5";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c6: power-controller@378 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x378 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c6";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c7: power-controller@380 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x380 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c7";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_i2c8: power-controller@388 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x388 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "i2c8";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi_p: power-controller@390 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x390 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi_p";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_uart_p: power-controller@398 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x398 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart_p";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_aes: power-controller@3a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aes";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_dispext1_fe: power-controller@3a8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3a8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_fe";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_adma: power-controller@3b0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3b0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_adma";
+	};
+
+	ps_dispext1_cpu: power-controller@3b8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3b8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_cpu";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_scodec_streaming: power-controller@3c0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3c0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "scodec_streaming";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc0_pcie: power-controller@3c8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3c8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc0_cio: power-controller@3d0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3d0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_cio";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_pcie: power-controller@3d8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3d8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_cio: power-controller@3e0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3e0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_cio";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_pcie: power-controller@3e8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3e8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_cio: power-controller@3f0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3f0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_cio";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_pcie: power-controller@3f8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x3f8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_cio: power-controller@400 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x400 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_cio";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_apcie_sys_gp: power-controller@408 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x408 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "apcie_sys_gp";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_apcie_st: power-controller@410 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x410 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "apcie_st";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_dispext0_fe: power-controller@418 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x418 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_fe";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_adma: power-controller@420 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x420 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_adma";
+	};
+
+	ps_dispext0_cpu: power-controller@428 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x428 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_cpu";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi0: power-controller@430 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x430 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi0";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi1: power-controller@438 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x438 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi1";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi2: power-controller@440 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x440 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi2";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi3: power-controller@448 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x448 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi3";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi4: power-controller@450 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x450 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi4";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_spi5: power-controller@458 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x458 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "spi5";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_qspi: power-controller@460 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x460 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "qspi";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart_n: power-controller@468 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x468 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart_n";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart0: power-controller@470 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x470 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart0";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart1: power-controller@478 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x478 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart1";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart2: power-controller@480 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x480 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart2";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart3: power-controller@488 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x488 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart3";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart4: power-controller@490 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x490 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart4";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart5: power-controller@498 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x498 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart5";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_uart6: power-controller@4a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "uart6";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_dbe: power-controller@4a8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4a8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_dbe";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dpext1: power-controller@4b0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4b0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dpext1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_gp0: power-controller@4b8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4b8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_gp0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_gp1: power-controller@4c0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4c0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_gp1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_gpl: power-controller@4c8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4c8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_gpl";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_ppp: power-controller@4d0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4d0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_ppp";
+	};
+
+	ps_atc0_cio_pcie: power-controller@4d8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4d8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_cio_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc0_cio_usb: power-controller@4e0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4e0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc0_cio_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_cio_pcie: power-controller@4e8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4e8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_cio_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc1_cio_usb: power-controller@4f0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4f0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc1_cio_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_cio_pcie: power-controller@4f8 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4f8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_cio_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc2_cio_usb: power-controller@500 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x500 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc2_cio_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_cio_pcie: power-controller@508 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x508 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_cio_pcie";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_atc3_cio_usb: power-controller@510 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x510 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "atc3_cio_usb";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_sys_gp_ocla: power-controller@518 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x518 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sys_gp_ocla";
+	};
+
+	ps_apcie_sys_st: power-controller@520 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x520 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "apcie_sys_st";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_dbe: power-controller@528 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x528 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_dbe";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dpext0: power-controller@530 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x530 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dpext0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_gp0: power-controller@538 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x538 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_gp0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_gp1: power-controller@540 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x540 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_gp1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_gpl: power-controller@548 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x548 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_gpl";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_ppp: power-controller@550 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x550 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_ppp";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext1_dsc: power-controller@558 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x558 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext1_dsc";
+	};
+
+	ps_apcie_phy_sw: power-controller@560 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x560 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "apcie_phy_sw";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_sys_st_ocla: power-controller@568 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x568 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sys_st_ocla";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dispext0_dsc: power-controller@570 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x570 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dispext0_dsc";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_st0_aus5_aon: power-controller@578 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x578 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "st0_aus5_aon";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_st0_aus5: power-controller@580 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x580 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "st0_aus5";
+	};
+
+	ps_trace_fab: power-controller@588 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x588 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "trace_fab";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_dptx_phy: power-controller@590 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x590 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dptx_phy";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	ps_pmp: power-controller@598 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x598 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pmp";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_pms_sram: power-controller@5a0 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x5a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pms_sram";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	ps_sep: power-controller@c00 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc00 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "sep";  /* 结构抄自 M4 模板同名项 */
+		apple,always-on; /* Core device */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_he_nrcs0: power-controller@4068 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4068 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_he_nrcs0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_he_nrcs1: power-controller@4070 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4070 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_he_nrcs1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_base: power-controller@4078 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4078 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_base";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_a: power-controller@4080 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4080 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_shim: power-controller@4088 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4088 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_shim";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_piodma: power-controller@4090 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4090 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_piodma";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop2_piodma: power-controller@4098 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4098 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop2_piodma";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_scm: power-controller@40a0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40a0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_scm";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_cpu: power-controller@40a8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40a8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_cpu";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop2_cpu: power-controller@40b0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40b0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop2_cpu";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_fr: power-controller@40b8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40b8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_fr";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_uart0: power-controller@40c0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40c0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_uart0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_uart1: power-controller@40c8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40c8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_uart1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_aop_uart2: power-controller@40d0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40d0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "aop_uart2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_p: power-controller@40d8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40d8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_p";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_a: power-controller@40e0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40e0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_sense_pdmc: power-controller@40e8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40e8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_sense_pdmc";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_base_s_a: power-controller@40f0 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40f0 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_base_s_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_base_ns_a: power-controller@40f8 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x40f8 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_base_ns_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_mca: power-controller@4100 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4100 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_mca";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca0_m: power-controller@4108 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4108 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca0_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca1_m: power-controller@4110 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4110 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca1_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca2_m: power-controller@4118 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4118 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca2_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca3_m: power-controller@4120 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4120 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca3_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca4_m: power-controller@4128 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4128 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca4_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_mca5_m: power-controller@4130 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4130 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_mca5_m";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_c: power-controller@4138 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4138 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_c";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_s_a: power-controller@4140 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4140 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_s_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_ns_a: power-controller@4148 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4148 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_ns_a";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_rx0: power-controller@4150 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4150 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_rx0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_rx1: power-controller@4158 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4158 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_rx1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_rx2: power-controller@4160 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4160 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_rx2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_rx3: power-controller@4168 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4168 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_rx3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_rx4: power-controller@4170 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4170 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_rx4";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_audio_leap_tx0: power-controller@4178 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4178 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "audio_leap_tx0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pdm0_audio_ref: power-controller@4180 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4180 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pdm0_audio_ref";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_pdm1_audio_ref: power-controller@4188 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x4188 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "pdm1_audio_ref";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_i2cm0: power-controller@8028 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8028 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_i2cm0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_i2cm1: power-controller@8030 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8030 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_i2cm1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_i2cm2: power-controller@8038 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8038 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_i2cm2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_i2cm3: power-controller@8040 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8040 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_i2cm3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_i2cm4: power-controller@8048 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8048 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_i2cm4";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_fpwm0: power-controller@8050 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8050 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_fpwm0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_fpwm1: power-controller@8058 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8058 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_fpwm1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_fpwm2: power-controller@8060 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8060 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_fpwm2";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_fpwm3: power-controller@8068 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8068 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_fpwm3";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_ptd: power-controller@8070 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8070 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_ptd";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_smc_cpu: power-controller@8078 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8078 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "smc_cpu";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_he_nrcs0: power-controller@8080 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8080 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_he_nrcs0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_nub_he_nrcs1: power-controller@8088 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x8088 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "nub_he_nrcs1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_periph: power-controller@c018 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc018 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_periph";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_cpu: power-controller@c020 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc020 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_cpu";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_shim_pclk: power-controller@c028 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc028 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_shim_pclk";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_scm_fabric: power-controller@c030 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc030 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_scm_fabric";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_spi0: power-controller@c038 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc038 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_spi0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_spi1: power-controller@c040 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc040 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_spi1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_i2cm0: power-controller@c048 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc048 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_i2cm0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_uart0: power-controller@c050 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc050 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_uart0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_sram: power-controller@c058 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc058 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_sram";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_mtp_dma: power-controller@c060 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0xc060 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "mtp_dma";
+	};
+
+	ps_disp_cpu: power-controller@10000 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10000 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_cpu";  /* 结构抄自 M4 模板同名项 */
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_gp0: power-controller@10008 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10008 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_gp0";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_gp1: power-controller@10010 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10010 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_gp1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_gpl: power-controller@10018 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10018 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_gpl";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_cmb: power-controller@10020 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10020 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_cmb";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_ppp: power-controller@10028 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10028 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_ppp";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_brc: power-controller@10030 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10030 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_brc";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_blc: power-controller@10038 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10038 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_blc";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_hilo: power-controller@10040 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10040 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_hilo";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_spi: power-controller@10048 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10048 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_spi";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_spmi: power-controller@10050 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10050 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_spmi";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_smb: power-controller@10058 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10058 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_smb";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_smb1: power-controller@10060 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10060 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_smb1";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_adma: power-controller@10068 {
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10068 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_adma";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_disp_dbe: power-controller@10070 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10070 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "disp_dbe";
+	};
+
+	/* ⚠️ M4 模板里没有同名项 —— 下面属性是猜的,需确认 */
+	ps_dp: power-controller@10078 { /* 虚拟域:flags 有 0x10,可能没有真实寄存器 */
+		compatible = "apple,t8142-pmgr-pwrstate", "apple,t8103-pmgr-pwrstate";
+		reg = <0x10078 4>;
+		#power-domain-cells = <0>;
+		#reset-cells = <0>;
+		label = "dp";
+	};
+
+};
+
+/*
+ * ============ 以下条目**未**写出,偏移与其他条目重复 ============
+ *
+ * 偏移重复说明绝对地址还缺一个基址。定出基址之前不要动这些。
+ * 格式: 偏移  设备号  名字
+ *
+ *  0x00000  id=331   ANE-SYS-V
+ *  0x00000  id=522   ANE-SYS-V-PMP
+ *  0x00000  id=337   ANS-V
+ *  0x00000  id=338   APCIE-GP-V
+ *  0x00000  id=340   APCIE-ST-V
+ *  0x00000  id=339   APCIE-SYS-GP-V
+ *  0x00000  id=341   APCIE-SYS-ST-V
+ *  0x00000  id=347   ATC0-COMMON-V
+ *  0x00000  id=321   ATC0-USB-AUD-V
+ *  0x00000  id=325   ATC0-USB-DART
+ *  0x00000  id=343   ATC0-USB-V
+ *  0x00000  id=357   ATC0_PCIE-V
+ *  0x00000  id=348   ATC1-COMMON-V
+ *  0x00000  id=322   ATC1-USB-AUD-V
+ *  0x00000  id=326   ATC1-USB-DART
+ *  0x00000  id=344   ATC1-USB-V
+ *  0x00000  id=358   ATC1_PCIE-V
+ *  0x00000  id=349   ATC2-COMMON-V
+ *  0x00000  id=323   ATC2-USB-AUD-V
+ *  0x00000  id=327   ATC2-USB-DART
+ *  0x00000  id=345   ATC2-USB-V
+ *  0x00000  id=359   ATC2_PCIE-V
+ *  0x00000  id=350   ATC3-COMMON-V
+ *  0x00000  id=324   ATC3-USB-AUD-V
+ *  0x00000  id=328   ATC3-USB-DART
+ *  0x00000  id=346   ATC3-USB-V
+ *  0x00000  id=360   ATC3_PCIE-V
+ *  0x00000  id=356   AUDIO-LLT-V
+ *  0x00000  id=316   AUSB0_AONPCIE-V
+ *  0x00000  id=312   AUSB0_AONUSB-V
+ *  0x00000  id=317   AUSB1_AONPCIE-V
+ *  0x00000  id=313   AUSB1_AONUSB-V
+ *  0x00000  id=318   AUSB2_AONPCIE-V
+ *  0x00000  id=314   AUSB2_AONUSB-V
+ *  0x00000  id=319   AUSB3_AONPCIE-V
+ *  0x00000  id=315   AUSB3_AONUSB-V
+ *  0x00000  id=330   AVD-SYS-V
+ *  0x00000  id=304   CIO0_RECONFIG-V
+ *  0x00000  id=305   CIO1_RECONFIG-V
+ *  0x00000  id=306   CIO2_RECONFIG-V
+ *  0x00000  id=307   CIO3_RECONFIG-V
+ *  0x00000  id=353   CPU-BUSY
+ *  0x00000  id=403   DCP0-V
+ *  0x00000  id=365   DISP-CARVE-OUT
+ *  0x00000  id=364   DISP-FB-ACTIVE
+ *  0x00000  id=519   DISP-M3-V
+ *  0x00000  id=363   DISP-MIE-DPB
+ *  0x00000  id=408   DISP-SYS-V
+ *  0x00000  id=520   DISPEXT0-M3-V
+ *  0x00000  id=406   DISPEXT0-V
+ *  0x00000  id=521   DISPEXT1-M3-V
+ *  0x00000  id=407   DISPEXT1-V
+ *  0x00000  id=361   ECPM_NRG
+ *  0x00000  id=560   ECPM_SRAM
+ *  0x00000  id=544   ECPU0_SRAM
+ *  0x00000  id=545   ECPU1_SRAM
+ *  0x00000  id=546   ECPU2_SRAM
+ *  0x00000  id=547   ECPU3_SRAM
+ *  0x00000  id=548   ECPU4_SRAM
+ *  0x00000  id=549   ECPU5_SRAM
+ *  0x00000  id=1     ECPU_0
+ *  0x00000  id=355   FR-SCALING-V
+ *  0x00000  id=517   GFX-ASC
+ *  0x00000  id=518   GFX-ASC1
+ *  0x00000  id=516   GFX-BUSY
+ *  0x00000  id=515   GFX-SGX
+ *  0x00000  id=512   GPX
+ *  0x00000  id=335   ISP-SYS-V
+ *  0x00000  id=332   JPG0-V
+ *  0x00000  id=333   JPG1-V
+ *  0x00000  id=334   MSR-V
+ *  0x00000  id=362   PCPM_NRG
+ *  0x00000  id=561   PCPM_SRAM
+ *  0x00000  id=550   PCPU0_SRAM
+ *  0x00000  id=551   PCPU1_SRAM
+ *  0x00000  id=552   PCPU2_SRAM
+ *  0x00000  id=553   PCPU3_SRAM
+ *  0x00000  id=336   SCODEC-V
+ *  0x00000  id=311   SIO-CPU-V
+ *  0x00000  id=320   USB-AUDIO-V
+ *  0x00000  id=405   USB-LLT-V
+ *  0x00000  id=354   VDD_CIO-V
+ *  0x00000  id=342   VENC-DMA-V
+ *  0x00000  id=351   VENC-ME0-V
+ *  0x00000  id=352   VENC-ME1-V
+ *  0x00000  id=329   VENC-SYS-V
+ *  0x00058  id=199   DEBUG_GATED
+ *  0x00058  id=12    PCPM
+ *  0x00110  id=514   GFX
+ *  0x00110  id=14    MSG
+ *  0x04000  id=221   AOP_FILTER
+ *  0x04000  id=162   ISP_CPU
+ *  0x04008  id=222   AOP_GPIO
+ *  0x04008  id=163   ISP_CPU_CORE0
+ *  0x04010  id=223   AOP_SRAM
+ *  0x04010  id=164   ISP_CPU_CORE1
+ *  0x04018  id=224   AOP_FR
+ *  0x04018  id=165   ISP_FE
+ *  0x04020  id=225   AOP_DART
+ *  0x04020  id=166   DPRX
+ *  0x04028  id=226   AOP_I2CM0
+ *  0x04028  id=167   ISP_SECURE
+ *  0x04030  id=227   AOP_I2CM1
+ *  0x04030  id=168   ISP_STS0
+ *  0x04038  id=228   AOP_I2CM2
+ *  0x04038  id=169   ISP_STS1
+ *  0x04040  id=229   AOP_I2CM3
+ *  0x04040  id=170   ISP_PEARL
+ *  0x04048  id=230   AOP_SPI0
+ *  0x04048  id=171   ISP_BE
+ *  0x04050  id=231   AOP_SPI1
+ *  0x04050  id=172   ISP_CLR
+ *  0x04058  id=232   AOP_SPMI0
+ *  0x04058  id=173   ISP_CVD
+ *  0x04060  id=233   AOP_SPMI1
+ *  0x04060  id=174   ISP_CVM
+ *  0x08000  id=271   SMC_FABRIC
+ *  0x08000  id=175   VENC_DMA
+ *  0x08008  id=272   SMC_GPIO
+ *  0x08008  id=176   VENC_PIPE4
+ *  0x08010  id=273   SMC_AON
+ *  0x08010  id=177   VENC_PIPE5
+ *  0x08018  id=274   SMC_UART0
+ *  0x08018  id=178   VENC_ME0
+ *  0x08020  id=275   SMC_UART1
+ *  0x08020  id=179   VENC_ME1
+ *  0x0c000  id=180   ANE_CPU
+ *  0x0c000  id=289   MTP_FABRIC
+ *  0x0c008  id=181   ANE_TDBASE
+ *  0x0c008  id=290   MTP_GPIO
+ *  0x0c010  id=182   ANE_MPM
+ *  0x0c010  id=291   MTP_BASE
+ *
+ * 合计 132 条。
+ */
