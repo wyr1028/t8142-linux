@@ -203,79 +203,63 @@ csrutil disable        # bputil 会重置 SIP,所以放后面
 
 ---
 
-## ⑤ 装启动对象
+## ⑤ 装启动对象 —— **他们实测过的步骤**
 
-> ⚠️ **下面的流程来自公开文档的搜索引擎摘要,不是官方页面原文**
-> (asahilinux.org 在我这边的网络取不到)。
-> **动手前务必对照原文核对:**
-> - m1n1 User Guide — https://asahilinux.org/docs/sw/m1n1-user-guide/
-> - Tethered Boot Setup (For Developers) — AsahiLinux/docs 仓库 wiki
+> 来源:`ImAtomiskk/asahim5` 的 `notes/installation.md`(**同一台机器 J704** 实测)。
+> 我原来那套(stub 卷 / 跑 Asahi 安装器)**作废**。
 
-### 关键发现:**不用自己规划卷**
+### ① 先把整个 m1n1 文件夹拷到 U 盘
 
-之前我以为要手搓一个 stub 卷。**实际上有现成流程,stub 由安装器自动创建。**
+recoveryOS 里读不到你 Mac 上的文件,所以要走 U 盘:
 
-**① 先腾空间**(在 macOS 里)
-
-```bash
-diskutil list                    # 看清容器和分区号
-diskutil apfs resizeContainer disk0s2 100GB
+```
+/Volumes/<U盘>/
+└── m1n1/
+    └── build/
+        ├── m1n1.macho
+        ├── m1n1.bin
+        └── ...
 ```
 
-> ⚠️ **别把 macOS 缩到 70 GB 以下。** 需要 macOS 12.3+ 和管理员密码。
-> 这一步只是缩小 macOS 容器、腾出未分配空间,不动数据。
+(整个文件夹都要 —— 后面 proxyclient 的脚本还要用)
 
-**② 跑安装器**(它会创建约 3 GB 的 stub 容器,命名 "Linux")
+### ② 进 1TR 后,先确认**真的**在 1TR
 
-```bash
-curl -L https://mrcn.st/alxsh | sh
-```
+> **看菜单栏「工具」菜单里有没有「恢复助理」。**
+> **没有 → 退出重启,重进。** 没有它 `kmutil` 会静默失败或报权限错。
 
-提示选 stub 的基础版本时,选 **macOS 12.1**。
-
-**③ 进 1TR 跑 step2**
-
-按电源键 → 选项 → 终端:
+### ③ 挂载 U 盘
 
 ```bash
-/Volumes/Linux/step2.sh
+diskutil list                 # 找到 U 盘,记下 /dev/diskXsY
+diskutil mount /dev/diskXsY
+ls /Volumes/                  # 确认它出现在这里
 ```
 
-这一步"为自定义内核做好准备",并把 m1n1 设为那个 stub 的内核。
-
-### 如果走手动方式
-
-在 1TR 里:
+### ④ 写入
 
 ```bash
-kmutil configure-boot -c m1n1.bin \
-    --raw --entry-point 2048 --lowest-virtual-address 0 \
-    -v /Volumes/Linux
+kmutil configure-boot \
+  -c "/Volumes/<U盘>/m1n1/build/m1n1.bin" \
+  --raw \
+  --entry-point 2048 \
+  --lowest-virtual-address 0 \
+  -v "/Volumes/Macintosh HD - Data"
 ```
 
-**`-v` 指向的就是那个 stub 容器**(名字叫 `Linux`),
-**不是 `Macintosh HD`。**
+> ⚠️ **注意 `-v`**:他们实测**直接指向 macOS 数据卷**(`/Volumes/Macintosh HD - Data`),
+> **不建 stub 卷**。这和我之前推断的完全不同。
+> **先 `diskutil list` 确认你那台的数据卷叫什么** —— 名字可能不一样。
+>
+> **成功的话没有任何输出。** 报权限错 = 你不在 1TR,回 ②。
 
-### 已知的坑
+### ⑤ 重启
 
-| 报错 | 原因 |
-|---|---|
-| `not paired` | 不是从**目标卷自己的**恢复环境里跑的 |
-| `Fileset Error: Invalid Mach-O boot properties` | 目标卷不是默认启动磁盘 |
+```bash
+reboot
+```
 
-> 🚨 **最要紧的一条**:`-v` 指向的**绝对不能是 macOS 那个卷**。
-> 指错了可能让 macOS 起不来 —— 那正是备份要救的场面。
-
-### ✅ 关于依赖 Asahi 安装器 —— 已明确,无异议
-
-**用他们的安装器和 `step2.sh` 是可以的。**
-
-项目定位已经写死([../README.md](../README.md)):
-
-> **能用,但不合并。** 依赖、工具、安装器、公开代码随便用;
-> 只是**产出的东西绝不回到那边去**。
-
-所以这里直接用现成流程,不用自己复刻 stub 容器的创建。
+屏幕会显示 asahi logo → 变黑 → 出一些日志。**这是正常的,m1n1 在跑。**
 
 ---
 
@@ -291,42 +275,71 @@ kmutil configure-boot -c m1n1.bin \
 
 ## ⑦ 建连接 —— **判据在这里**
 
-> 同样来自公开文档摘要,**对照原文核对**。
-
-### 宿主侧依赖(在游戏本上)
+### 宿主侧(游戏本上)
 
 ```bash
-pip3 install --user pyserial construct serial.tool
+cd m1n1
+pip3 install -r proxyclient/requirements.txt
+export M1N1_PORT=/dev/ttyACM0
+python3 proxyclient/tools/shell.py
 ```
 
-> ⚠️ Ubuntu 24.04 起 `pip3 install --user` 会被 PEP 668 拦。
-> 用 venv,或者加 `--break-system-packages`。
+> ⚠️ 是 **`M1N1_PORT`**,不是 `M1N1DEVICE`(我前面写错了)。
+>
+> 权限被拒的话:
+> ```bash
+> sudo usermod -aG dialout $USER    # 然后注销重登
+> ```
 
-### 调试口在哪个口
+### 判据
 
-**MacBook:左侧最靠屏幕的那个雷雳口。**
-(不是随便一个口 —— m1n1 的 device-mode USB 走的是特定的那个。)
+**Python 提示符出现 = M1 完成。** 🎉
 
-### 连上去
+```python
+>>> p.chip_id()      # 应返回 T8142
+>>> p.read32(0x...)
+```
+
+### ⚠️ 已知问题:读出来**全是 0**
+
+**这不是你的问题,是已知的、别人也遇到的。**
+
+> m1n1 的 proxy client 把 **M1/M2 时代的 MMIO 基址硬编码**在 `proxyclient/hw/` 里,
+> M5 上这些地址挪了。客户端读错地方,静默返回 0。
+
+**能连上就是成功。** 修基址是下一步。
+
+---
+
+## ⑦b ⭐ 连上之后的下一步 —— **别人卡在这,你从这开始**
+
+**别急着 dump 设备树。第一件事是抓 m1n1 的启动日志:**
 
 ```bash
-export M1N1DEVICE=/dev/ttyACM0
+picocom -b 115200 /dev/ttyACM0 | tee m5_boot_log.txt
 ```
 
-**看到 m1n1 的交互提示符 = M1 完成。** 🎉
+> **m1n1 启动时会打印真实的地址表** —— 不经过那个坏掉的 proxy。
+> **这份日志是所有后续工作的地基。** 存好。
 
-> 认不到 `/dev/ttyACM0`?
-> 1. 先确认插的是**那个口**
-> 2. 再确认线是数据线(§1.4)
-> 3. 最后怀疑 m1n1 没真起来 —— 回 ⑥ 看
+然后按顺序:
 
-### 之后怎么引导内核(M6 会用到)
+1. 把日志里的地址和 `proxyclient/hw/` 里的硬编码对比
+2. **锚定 UART**(它本来就活着)—— 先让 `p.read32` 返回非零
+3. 看偏移是不是**统一的** —— 统一的话改一处就够,不统一就得逐个来
 
-```bash
-python3 proxyclient/tools/linux.py -b 'earlycon debug rootwait' Image.gz <dtb>
-```
+### m1n1 **自带**我们要的工具 —— 别再自己写
 
-**参数顺序:内核在前,dtb 在后**,initramfs 可选放最后。
+| m1n1 自带 | 作用 | 我们之前打算自己写的 |
+|---|---|---|
+| `proxyclient/adt.py` | **dump / diff Apple 设备树** | ← M2 的目标 |
+| `proxyclient/tools/pmgr_adt2dt.py` | **ADT → 设备树转换** | ← 我们的 `adt2dts.py` |
+| `proxyclient/tools/shell.py` | proxy shell | |
+| `proxyclient/tools/run_guest.py` | hypervisor 模式 | |
+| **`proxyclient/hw/`** | **硬编码 MMIO 基址 —— M5 要修的就是这里** | |
+
+> **不要再造轮子。** `pmgr_adt2dt.py` 就是"ADT→DTS",我们的工具只需要做**补充**
+> (比如它在 ioreg 数据上的用法),不需要重写转换器本身。
 
 ---
 
@@ -335,10 +348,23 @@ python3 proxyclient/tools/linux.py -b 'earlycon debug rootwait' Image.gz <dtb>
 **别慌,也别乱试。** 按这个顺序:
 
 1. **M5 能不能正常进 macOS?** 能 → 问题只在 m1n1 那侧,数据没事
-2. **进不去 macOS?** → 进恢复环境,或走 DFU(M3 MBA + Apple Configurator)
+2. **进不去 macOS?** → 进恢复环境,或走 DFU
 3. **实在不行** → 把现象、串口输出、报错原文贴给我
 
-**只要备份在、M3 MBA 在,就没有救不回来的情况。**
+**DFU 恢复不一定需要 Mac 了** —— 他们实测 **Ubuntu 也能做**:
+
+```bash
+sudo apt install libimobiledevice idevicerestore
+sudo idevicerestore -e <你的 IPSW>     # IPSW 从 ipsw.me 下载
+```
+
+> ⚠️ **但要先备好 IPSW。** 建议现在就下好一个 macOS IPSW 存着。
+> 而且注意:`recovery.md` 里写着,如果走到「圆圈叹号」那一步、
+> **又没有 IPSW 可刷,数据就全没了。**
+
+**DFU 进入方式**(必须先关 MagSafe,只用 USB-C 连):
+按住电源 10 秒关机 → 按一下电源 → 立刻同时按住 **左Ctrl + 左Option + 右Shift + 电源**,
+约 10 秒后松开除电源外的键 → 继续按电源最多 10 秒,直到主机上出现 DFU 窗口。
 
 ---
 
