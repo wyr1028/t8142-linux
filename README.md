@@ -51,6 +51,7 @@ docs/
   RISKS.md           实操风险:机器 / 数据 / 时间(讲技术,不讲法律)
   DEPENDENCIES.md    依赖侵权审查:每个外部依赖的许可证与风险
   PMGR-DEVICES.md    PMGR `devices` 属性的结构解码(含来源诚实说明)
+  PMGR-DELTA.md      M5 vs M4 的 PMGR 差异 —— 回答"几个月还是几年"
 tools/
   adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
   adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点
