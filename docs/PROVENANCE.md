@@ -67,6 +67,7 @@
 | 2026-10-11 | 目标机当前系统 = macOS **27.0.1 (26A434)**;ipsw.me 上 `Mac17,2` 的最新 IPSW 同为 27.0.1 | 公开 | `api.ipsw.me/v4/device/Mac17,2?type=ipsw` | ✅ |
 | 2026-10-11 | **更正**:`tools/check_host.sh` 的 `pip3 install --user pyserial construct serial.tool` 包名有误 —— `serial.tool` 不是 PyPI 包(pyserial 提供的是 `serial.tools` 模块);本机改用 apt 的 `python3-construct` | 真机 | 本机 `apt install python3-construct` 后 `import construct` 成功(v2.10.68) | ✅ |
 | 2026-10-11 | **M0 主机就绪**:游戏本 = Ubuntu 26.04 LTS **Desktop**,x86_64;`tools/check_host.sh` **13/13 全绿**;`make test` 四个测试文件全过 | 真机 | 本机跑 `bash tools/check_host.sh` 与 `make test` | ✅ |
+| 2026-10-11 | m1n1 proxyclient 实际 import `from serial.tools.miniterm import Miniterm` —— `serial.tools` **由 pyserial 提供**;官方文档里的 `serial.tool` 是多余的(该名字虽是真实 PyPI 包 `serial-tool`,但与 m1n1 无关) | 公开 | `AsahiLinux/m1n1` 的 `proxyclient/m1n1/proxy.py:5` + PyPI API | ✅ |
 
 ---
 
