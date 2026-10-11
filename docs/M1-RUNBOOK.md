@@ -203,7 +203,24 @@ csrutil disable        # bputil 会重置 SIP,所以放后面
 
 ---
 
-## ⑤ 装启动对象 —— **他们实测过的步骤**
+## ⑤ 装启动对象
+
+> ## ⚠️ 动 `kmutil` 之前,先读 [HOW-TO-UNDO.md](HOW-TO-UNDO.md)
+>
+> **`-v` 指向哪个卷,决定了之后能不能回 macOS:**
+>
+> | 指向 | 后果 |
+> |---|---|
+> | ✅ **独立 stub 卷**(`/Volumes/Linux`) | macOS 的 LocalPolicy 没动 → 启动器里选 macOS 就回去 |
+> | ❌ **macOS 自己的卷** | **启动被顶掉,回不去** —— 启动器里选 "Macintosh HD" 也是跑 m1n1 |
+>
+> **推荐官方方案**(安装器 / 独立 stub)。
+> 下面 §⑤b 那套是**写 macOS 卷**的 —— 在同一台机器上实测过,
+> 但**有上面那个代价**。
+
+---
+
+## ⑤b ImAtomiskk 的实测步骤(⚠️ 写的是 macOS 卷)
 
 > 来源:`ImAtomiskk/asahim5` 的 `notes/installation.md`(**同一台机器 J704** 实测)。
 > 我原来那套(stub 卷 / 跑 Asahi 安装器)**作废**。

@@ -165,6 +165,20 @@ python3 tools/scrub_adt.py --verify <要外发的文件>
 ---
 
 
+## 🚨 唯一**真能把机器搞坏**的东西:NOR / SPI Flash
+
+官方 `dev-quickstart.md` 原文:
+
+> **M1 Mac 实际上几乎不会变砖 —— 只要你不写 SPI Flash。**
+> 那上面存着 **vital product identification 和校准数据**,
+> 搞坏了**只能送回 Apple**(只有他们能重做身份和产线校准)。
+> **没有任何理由去碰它。**
+
+**行动项**:写设备树时**不要声明 NOR flash / SPI flash 节点**。
+这是全线唯一"不可恢复"的操作 —— 其他都能 DFU 救,这个不能。
+
+---
+
 ## 🚨🚨 真实案例:有人**误抹了整个盘**(包括固件和恢复环境)
 
 来源:`ImAtomiskk/asahim5` 的 `notes/unrelated.md`(**同一台机器 J704**)。
