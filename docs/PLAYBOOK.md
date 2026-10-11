@@ -17,7 +17,7 @@
 
 | 角色 | 机器 | 状态 |
 |---|---|---|
-| **Linux 主机**(tethered boot) | **游戏本**,装 Ubuntu LTS **双系统** | ⬜ 待装 |
+| **Linux 主机**(tethered boot) | **游戏本**,装 Ubuntu LTS **Desktop 版双系统** | ⬜ 待装 |
 | **DFU 兜底**(救砖) | **M3 MacBook Air 15"**,装 Apple Configurator 2 | ✅ 已装 |
 | USB-C **数据线** | 必须是数据线,不是只充电的线 | ✅ 已验证 |
 | M5 完整备份 | Time Machine,且**验证过能恢复** | ✅ **已验证**(2026-10-11) |
@@ -94,6 +94,37 @@ manage-bde -status
 Windows「磁盘管理」压缩卷,腾出 **60~80 GB 未分配**。
 
 > ⚠️ **用 Windows 自己的工具缩,别在 Linux 安装程序里缩 Windows 分区。**
+
+---
+
+### 1.0b 装哪一版 Ubuntu —— **Desktop,不是 Server**
+
+⚠️ 校园网认证走 **深澜 Srun + 统一身份认证(SSO)**,认证页是 **JS 提交**的
+(`/v1/srun_portal_sso`),不是简单的表单 POST。
+
+**装 Server 版会陷入死循环:**
+
+```
+Server 版没浏览器
+   → 过不了 JS 认证页
+   → 没网
+   → apt 装不了任何东西(包括补装一个文本浏览器)
+```
+
+**所以装 Desktop 版。** 有火狐,打开 `10.0.0.55` 点一下登录即可。
+**GUI 对这个项目完全无害** —— 游戏本只是拿来编译 + 当串口终端。
+
+> 不建议为这个写无界面登录脚本:它走 SSO,接口复杂且校方随时可能改,
+> 是个会持续坏的东西。装 Desktop 五分钟解决。
+
+**装完先试这个(免费):**
+
+```bash
+ping -c 3 www.baidu.com
+```
+
+校园网认证**通常绑 MAC**。如果游戏本在 Windows 下已经认证着,
+Linux 用同一个 MAC **可能不用重新认证**。通了就什么都不用做。
 
 ---
 

@@ -67,7 +67,7 @@
 
 | 角色 | 机器 | 状态 |
 |---|---|---|
-| Linux 主机 | **游戏本 → 装 Ubuntu LTS 双系统** | ⬜ 待装 |
+| Linux 主机 | **游戏本 → 装 **Ubuntu Desktop** 双系统** | ⬜ 待装 |
 | DFU 兜底 | **M3 MacBook Air 15" → 装 Apple Configurator 2** | ⬜ 待装 |
 | 数据线 | USB-C **数据线**(不是充电线) | ⬜ 待确认 |
 | 备份 | M5 的 Time Machine,且验证过能恢复 | ✅ **已验证** |
