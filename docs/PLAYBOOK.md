@@ -13,11 +13,27 @@
 
 ## 阶段 0 · 前置采购清单(一次性)
 
+### 本机的实际配置(2026-10-11 确认,**不需要买任何东西**)
+
+| 角色 | 机器 | 状态 |
+|---|---|---|
+| **Linux 主机**(tethered boot) | **游戏本**,装 Ubuntu LTS **双系统** | ⬜ 待装 |
+| **DFU 兜底**(救砖) | **M3 MacBook Air 15"**,装 Apple Configurator 2 | ⬜ 待装 |
+| USB-C **数据线** | 必须是数据线,不是只充电的线 | ⬜ 待确认 |
+| M5 完整备份 | Time Machine,且**验证过能恢复** | ⬜ 待做 |
+
+> ⚠️ 游戏本**不要用 WSL2**。WSL2 的 USB 直通靠 `usbipd-win`,而 device-mode USB
+> 是整条链路最关键也最脆的一环。装**双系统**。
+>
+> M3 MBA 当 DFU 主机没问题:Apple Configurator 要走 macOS 12.4+,它远超这个要求。
+
+### 通用要求(换机器时参考)
+
 | 项 | 要求 | 备注 |
 |---|---|---|
-| 第二台机器 | 能跑 USB 的 **Linux** 最佳;Apple Silicon Mac 次之 | Mac 也能用,但要装 Apple Configurator 做兜底 |
-| USB-C 线 | **必须是数据线**,不是只充电的线 | 这条最容易踩,充电线接上去什么都看不见 |
-| 备份 | M5 上一份完整备份 | Time Machine 即可 |
+| Linux 主机 | 能跑 USB 的 Linux | macOS 次之,但文档默认 Linux |
+| DFU 主机 | 任意 Mac,macOS **12.4+**,空闲 **50 GB** | 只用于救砖 |
+| USB-C 线 | **数据线** | 这条最容易踩,充电线接上去什么都看不见 |
 | 时间 | 预留一整个下午 | 中途卡住很正常,别赶时间 |
 
 **为什么第二台机器必须是 Linux**:tethered boot 期间,它要通过 USB 跟 M5 上的 m1n1 对话(device-mode USB),还要跑交叉编译。Mac 也能做(M 系列可原生编译),但 Linux 的工具链更省事。
