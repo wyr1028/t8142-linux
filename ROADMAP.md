@@ -66,12 +66,17 @@
 
 ## 阶段 4 · 工具(不吃硬件,可现在做)
 
-- [ ] **写 ADT → DTS 生成器**(`tools/adt2dts.py`)
-  - 输入:原始 ADT dump
-  - 输出:`t8142.dtsi` / `t8142-pmgr.dtsi` 骨架
-  - 理由:别手抄 129 条 power-state
-- [ ] 写 compatible diff 脚本(复现 §4 那 25 个的推导过程)
-- [ ] 写 M4 → M5 节点对照表生成器
+- [x] ADT → DTS 骨架生成器(`tools/adt2dts.py`)—— 2026-10-11
+- [x] compatible 差集(`tools/compat_diff.py`)—— 2026-10-11
+- [x] 硬件清单生成(`tools/adt_report.py`)—— 2026-10-11
+- [x] adtlib 自测 + dtc 交叉验证(`tests/`)—— 2026-10-11
+- [ ] ⭐ **解码 PMGR `devices` 属性**(`tools/pmgr_devices.py`)
+  - **最高优先级,且不用等真机** —— 见 [docs/HARDWARE.md §9](docs/HARDWARE.md)
+  - 数据已有:ioreg 把 18576 字节的 `devices` 原样带出来了,已抽出 335 个电源域名字
+  - 需要:读 m1n1 `src/pmgr.c`(公开 GPL)确定条目格式
+  - 产出:M5 的 power-domain 清单 → 与 M4 的 129 条对齐口径比较
+  - **理由:这是阶段 3 的唯一数据源,提前做等于把分水岭提前**
+- [ ] M4 → M5 节点对照表生成器
 
 ---
 

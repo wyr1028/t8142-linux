@@ -40,6 +40,10 @@
 | 2026-10-11 | M4 核 compatible = `apple,donan-e` / `apple,donan-p` | 公开 | 同上,`t8132.dtsi` | ✅ |
 | 2026-10-11 | M5(`t8142`)在 Linux DTS 中不存在 | 公开 | 同上,目录列表无 `t8142*` | ✅ |
 | 2026-10-11 | **更正**:m1n1 未引用的 compatible 总数是 39,其中带 `,t8142` 的 25 条、复用旧代号的 14 条。此前口述的"25"是后者的子集,不是全部 | 推导 | `tools/compat_diff.py ~/m5-adt.plist <repo>/src --soc t8142` | ✅ |
+| 2026-10-11 | PMGR 的 power-state 编码在 `/arm-io/pmgr` 的 `devices` 二进制属性里(18576 字节),不是节点 | 真机 | 解析 ioreg dump 的 pmgr 节点属性表 | ✅ |
+| 2026-10-11 | `devices` blob 内含 335 个唯一电源域名字(`ACTIVE` `ECPU_0` `AMCC0_P0` `AOP_DART` …) | 真机 | 从上述 blob 抽 NUL 结尾字符串 | ✅ |
+| 2026-10-11 | `devices` 条目疑似定长,名字在固定偏移(前两个在字节 32 与 84) | 真机 | 观察 blob 前 96 字节 hex | ⚠️ 结构未确证 |
+| 2026-10-11 | FDT 解析器正确性 | 推导 | `tests/test_adtlib.py`,含用 **dtc**(独立实现)生成的 DTB 交叉验证 | ✅ |
 
 ---
 

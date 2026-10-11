@@ -39,18 +39,23 @@
 
 ```
 README.md            本文件
-LEGAL.md             法律与风险边界
+LEGAL.md             法律与风险边界(讲法律)
 AI-USAGE.md          AI 使用声明
-ROADMAP.md           工作清单
-LICENSE              待补(GPL-2.0-or-later)
+ROADMAP.md           工作清单 —— 要做什么
+LICENSE              GPL-2.0-or-later(官方原文 + 选用说明)
+Makefile             make test / check / lint-trailing
 docs/
   HARDWARE.md        M5/J704 硬件事实(每条带来源与置信度)
   PROVENANCE.md      来源日志 —— 本项目最重要的合规资产
   PLAYBOOK.md        M0→M7 操作手册,每步带命令与判据
+  RISKS.md           实操风险:机器 / 数据 / 时间(讲技术,不讲法律)
 tools/
-  adtlib.py           ADT 读取层(ioreg plist + 原始 FDT 两种输入)
-  adt2dts.py          ADT → DTS 骨架生成器
-  compat_diff.py      ADT compatible 与代码库的差集(可复现 docs/HARDWARE.md §4)
+  adtlib.py          ADT 读取层(ioreg plist + 原始 FDT 两种输入)
+  adt2dts.py         ADT → DTS 骨架 / 列 compatible / 找节点
+  compat_diff.py     compatible 差集(复现 docs/HARDWARE.md §4)
+  adt_report.py      硬件清单生成(markdown)
+tests/
+  test_adtlib.py     自测 + dtc 交叉验证(FDT 路径的唯一覆盖)
 dts/                 t8142*.dts* / t8142-j704.dts
 ```
 

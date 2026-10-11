@@ -20,7 +20,7 @@ from typing import Iterator, Optional
 # --------------------------------------------------------------- 节点模型
 
 
-@dataclass
+@dataclass(eq=False)  # eq=False 让 Node 保持可哈希;用值比较节点没有意义,标识比较才对
 class Node:
     name: str
     props: dict = field(default_factory=dict)

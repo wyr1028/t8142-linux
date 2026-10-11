@@ -16,6 +16,8 @@ u-boot/
 # 原始硬件数据 —— ⚠️ 含序列号/UUID/MAC,绝不提交
 *-adt.plist
 *.plist
+raw-adt*
+*.dtb
 serial.txt
 dumps/
 
