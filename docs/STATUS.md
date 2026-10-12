@@ -123,12 +123,38 @@ at this time**"*(比 WIP 还低一档)。Installer = **no**。
 
 ---
 
+## ⭐ stub 路线(2026-10-11 新增)
+
+给 m1n1 一个**独立启动项**、且**不动 macOS** 的那条路。
+**建完了,卡在 bless。** 完整记录 → [STUB-INSTALL.md](STUB-INSTALL.md)
+
+```
+建 stub 卷组(disk4: Linux / Linux - Data / Preboot / Recovery)   ✅
+铺 macOS 启动文件 + 绕开 macOS 27 的三处格式差异                ✅
+编译 m1n1(llvm@21 + ld.lld + Rust 1.99.0,见文档)                ✅
+m1n1 装成 stub 的 boot.bin                                       ✅
+1TR 里能看见 "Linux"、能进去、Finish Installation 自动跑          ✅
+bless --setBoot(注册默认启动卷)                                  ❌
+    Failed to mount source preboot → mount_apfs returned : 66
+    → 死结:bless 失败 ⇒ 不是 1TR ⇒ bputil 拒改策略 ⇒ 拿不到 LocalPolicy
+```
+
+**三处 macOS 27 适配(本路线的核心发现,代码里已改)**:
+`bless2.RestoreBundlePath` 键被删 / `pbzm` 取代 `pbzx`(内层压缩未公开,绕过)
+/ `arm64eBaseSystem.dmg` 改从本机 Recovery 卷直接拷(逐字节相同,已验证)。
+
+**两个环境的实测错误码**(可复现,给接手的人):
+macOS 的 1TR 里 `bputil` → `pairing (17)`;stub 的 recoveryOS 里 → `AP boot mode (11)`。
+
+---
+
 ## 下一步
 
 ```
 1. ~~下好 macOS IPSW 存着~~     ✅ 已完成(唯一补不了的,已解决)
-2. M5 关 FileVault
+2. ~~M5 关 FileVault~~          ✅ 已确认是 Off
 3. ~~游戏本装 Ubuntu Desktop~~  ✅ 已完成(2026-10-11)
 4. ~~bash tools/check_host.sh~~  ✅ 13/13 全绿
-5. 照 M1-RUNBOOK 走
+5. 照 M1-RUNBOOK 走            ← tethered 路线,不依赖 stub
+   stub 路线(独立启动项)见上,卡在 bless
 ```
