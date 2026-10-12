@@ -2,6 +2,66 @@
 
 在 Apple M5 上运行 Linux 的**独立**移植项目。
 
+> # ⛔ 项目已停止(2026-10-12)
+>
+> **不做了。** 卡在最后一步 —— 让 m1n1 拥有一个**独立启动项**。
+>
+> ## 卡在哪
+>
+> 两条路都走不通:
+>
+> | 路线 | 做法 | 为什么停 |
+> |---|---|---|
+> | **写 macOS 卷** | `kmutil -v "/Volumes/Macintosh HD - Data"` | **同机 J704 实测走通过**,但代价是「启动器里选 macOS 也跑 m1n1」。**不接受这个代价** |
+> | **独立 stub 卷** | 在另一个容器建「假 macOS」给 m1n1 挂靠 | **卡在 `bless`** —— 详见下 |
+>
+> 第二条路本来是对的选择(不碰 macOS),而且**建 stub 那段已经全做通了**:
+> 卷组建成、macOS 启动文件铺好、m1n1 编译出来、装成 `boot.bin`、**1TR 里能看到
+> "Linux"、能进去、`step2.sh` 会自动跑**。卡死在最后一个环节:
+>
+> ```
+> bless --setBoot --device /dev/<stub System> --user <u> --stdinpass
+>   → BootabilityService: Failed to mount source preboot
+>     mount_apfs returned : 66  (EPERM)
+> ```
+>
+> 由此形成死结:
+>
+> ```
+> bless 失败 → 不成为默认启动卷 → stub 的 recoveryOS 不是 1TR
+>                                    ↓
+>                          bputil 拒绝改策略(AP boot mode)
+>                                    ↓
+>                         拿不到 LocalPolicy → stub 永远起不来
+> ```
+>
+> 两个环境的实测错误码(可复现):macOS 的 1TR 里 `pairing (17)`;
+> stub 自己的 recoveryOS 里 `AP boot mode (11)`。**两头都不通。**
+>
+> ## 为啥判定"不值得再挖"
+>
+> 堵点在 **Apple 私有框架内部**(`BootabilityBrain.framework` / `com.apple.bootpolicy`),
+> 不是命令用法问题。已经试过:挖 `bless` / `BootabilityService` 二进制、
+> 用 Apple 留的调试开关 `BYDisablePrebootBrain`(XPC 服务收不到)、
+> `fs_usage` 跟踪(被 SIP 挡)、多组参数、对照实验 —— 全部无效。
+> 再往下需要动 macOS 自己在用的卷,风险性质变了。
+>
+> **决定性的一条:M5 + macOS 27 这个组合,全网没有任何成功记录。**
+> Asahi 的用户能过,是因为他们机器上这条路本来就通。
+>
+> **顺带**:Asahi 的 `stub.py` 是按 macOS ≤14 写的,27 上有三处必须适配
+> (`bless2.RestoreBundlePath` 键被删 / `pbzm` 取代 `pbzx` / `BaseSystem.dmg`
+> 改从本机 Recovery 卷拷)—— **这三处已经解决并留档**,见
+> [docs/STUB-INSTALL.md](docs/STUB-INSTALL.md)。
+>
+> ## 机器状态
+>
+> **M5 已恢复原样**:stub 容器(disk4)删除、114 GB 还给 macOS;
+> boot policy 与 SIP 经逐字对照确认**未受影响**;本机所有原料已清空。
+> **仓库保留**,随时可以 `git clone` 接着走。
+>
+> ---
+
 > **`t8142` 是什么**:Apple M5 的 SoC 代号(从本机设备树里读出来的)。
 > 项目名用代号而不是 `m5`,是为了避开 Apple 商标。
 
