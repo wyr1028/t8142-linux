@@ -1,5 +1,32 @@
 # 装了 m1n1 之后怎么回 macOS?
 
+## ⚠️ 动手前:先把当前策略备份下来(3 分钟,出事时能救命)
+
+改任何 boot policy 之前先存一份"现在的样子" —— 出问题才有对照物。
+
+```bash
+VGID=$(diskutil apfs listVolumeGroups | grep -B4 'Macintosh HD' | grep -oE '[0-9A-F-]{36}' | head -1)
+OUT=~/boot-policy-backup-$(date +%F).txt
+{ sudo bputil -d -v "$VGID"; echo; sudo csrutil status; echo; nvram boot-args 2>&1; } > "$OUT"
+```
+
+> 🚨 **这份文件里有你机器的唯一标识(ECID 等)。不要传公开仓库,不要贴进聊天。**
+
+**改完之后再采一次,逐字对比。** 对照时看这些字段(值因机器而异,这里只列字段名和"正常的 macOS 应该是什么"):
+
+| 字段 | 含义 | macOS 正常值 |
+|---|---|---|
+| `OS Type` | 当前环境类型 | `macOS` |
+| `OS Pairing Status` | 与 recoveryOS 的配对状态 | `Not Paired` |
+| `Security Mode (CSEC)` | 安全模式 | `1` |
+| `Local Boot (lobo)` | 允许本地启动 | `1` |
+| `Pairing Integrity` | 策略完整性 | `Valid` |
+| SIP(`csrutil status`) | | `enabled` |
+
+**逐字一致 = 没动到 macOS。**
+
+---
+
 ## ⭐ 答案(2026-10-11 查实):`csrutil enable`
 
 来源:`ImAtomiskk/asahim5` 的 `notes/uninstallation.md`,**同一台机器(J704)实测过**。

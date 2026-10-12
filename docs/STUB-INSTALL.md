@@ -199,6 +199,42 @@ bless 失败  →  不成为默认启动卷  →  stub 的 recoveryOS 不是 1TR
 3. **LocalPolicy 是个文件**：`Preboot/<vgid>/LocalPolicy/<nonce>.img4`
    （见系统日志 `com.apple.BootPolicy`）。SEP 签名，手搓不出来。
 
+### 对 bless 的深入调查（2026-10-12，未成功，供接手者免于重复）
+
+**结论：堵点在 Apple 私有框架内部，不在命令用法。** 以下是逐项试过的：
+
+| 手段 | 做法 | 结果 |
+|---|---|---|
+| 挖二进制 | `strings /usr/sbin/bless`、`.../Bootability.framework/.../BootabilityService` | 见下 |
+| Apple 调试开关 | `sudo launchctl setenv BYDisablePrebootBrain 1` 后重跑 | **无效** —— 开关设在 shell 环境，XPC 服务收不到 |
+| 跟踪系统调用 | `fs_usage -f filesys` | 被 SIP 挡（空输出） |
+| 换参数组合 | `--mount <CoreServices> --create-snapshot` | 暴露挂载目标 |
+| 手工挂同一卷对照 | `mount_apfs /dev/<stub System> /tmp/t1` | `Operation already in progress`（卷已挂） |
+
+**从字符串里读出来的关键事实：**
+
+- `BootabilityService` 里有 `Unmounting source preboot (%@)` ⇒ 那段逻辑是
+  **「挂载 source preboot → 配置 → 卸载」**，我们卡在第 1 步。
+- 它还依赖 `BootabilityBrain.framework`，报错文案包括
+  `Brain framework is missing from preboot` / `Global trust cache is missing from preboot`
+  / `Preboot restore version is invalid`。
+- `--mount ... --create-snapshot` 暴露了真实动作：
+  ```
+  mount_apfs: volume could not be mounted: Permission denied
+  mount: /private/var/folders/.../T/bless.tDbE failed with 66
+  ```
+  ⇒ 它想把卷**重挂到临时目录**，而内核拒了。
+- **对照实验说明这不是"卷有问题"**：手工挂 macOS 自己的 Preboot 同样报
+  `Operation already in progress` —— 同一个卷、同样的挂法，**bless 拿到的是
+  `Permission denied` 而不是这个**，说明它先试图**卸下正在使用的卷**，那一步被内核拒。
+
+**为什么判定"不宜再挖"：** 再往下需要动 macOS 自己在用的卷；且
+`BootabilityBrain` / `bootpolicy` 是闭源私有框架。**M5 + macOS 27 这个组合
+没有任何成功记录**（Asahi 用户能过是因为他们机器上这条路本来就通）。
+
+**参考**：`bputil(1)` 手册、[[M1-RUNBOOK]] §⑤b（同机实测的替代路线，`kmutil -v`
+指向 macOS 数据卷 —— 代价是顶掉 macOS 启动项，但 `HOW-TO-UNDO.md` 有撤销步骤）。
+
 ---
 
 ## 怎么撤销
