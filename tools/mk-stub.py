@@ -19,19 +19,24 @@
 import sys, os, subprocess
 
 # ── 可调参数 ────────────────────────────────────────────────────
-SRC_REPO   = os.path.expanduser("~/asahi-installer")            # asahi-installer 的克隆
-DMG        = os.path.expanduser(                                 # Install macOS.app 的 SharedSupport
-    "~/Applications/Install macOS 27 Golden Gate.app/Contents/SharedSupport/SharedSupport.dmg")
+# 原料默认放在仓库的 upstream/ 下（该目录被 .gitignore 忽略，见 docs/STUB-INSTALL.md）：
+#   upstream/asahi-installer/                     ← 安装器源码
+#   upstream/Install macOS 27 Golden Gate.app/    ← OTA 资产来源
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)
+
+SRC_REPO   = os.path.join(_ROOT, "upstream", "asahi-installer")
+DMG        = os.path.join(_ROOT, "upstream", "Install macOS 27 Golden Gate.app",
+                          "Contents/SharedSupport/SharedSupport.dmg")
 TARGET_PART = "disk0s5"      # stub 容器所在物理分区（diskutil list 里核对）
 TARGET_CTR  = "disk4"        # 该分区对应的 APFS 容器（重启后编号会变，务必核对）
 LABEL       = "Linux"        # 目标卷名（stub.py 用它派生 "Linux - Data" 等）
 MACOS_VER   = "27.0.1"       # 与 OTA 包一致
 # ────────────────────────────────────────────────────────────────
 
-_home = os.path.expanduser("~")
-if os.geteuid() == 0 and os.environ.get("SUDO_USER"):
-    _home = os.path.expanduser("~" + os.environ["SUDO_USER"])
-SRC = os.path.join(_home, os.path.basename(SRC_REPO), "src")
+SRC = os.path.join(SRC_REPO, "src")   # SRC_REPO 已是绝对路径，sudo 下也成立
+if not os.path.isdir(SRC):
+    sys.exit(f"找不到 {SRC} —— 原料要放在仓库的 upstream/ 下，见 docs/STUB-INSTALL.md")
 sys.path.insert(0, SRC)
 os.chdir(SRC)                      # stub.py 用相对路径读 logo.icns / step2/
 

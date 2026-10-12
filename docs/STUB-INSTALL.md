@@ -95,11 +95,22 @@ shutil.copy(_src, os.path.join(basesystem_path, "arm64eBaseSystem.dmg"))
 
 ### 原料
 
-| 需要 | 从哪来 |
-|---|---|
-| macOS 27 的 OTA 资产 | `Install macOS 27.app/Contents/SharedSupport/SharedSupport.dmg` 里那个 17 GB zip |
-| Asahi 安装器源码 | `git clone https://gh-proxy.com/https://github.com/AsahiLinux/asahi-installer.git`（**只读用，不回馈**） |
-| m1n1 | 见 `docs/M1-RUNBOOK.md` §① |
+**统一放在仓库的 `upstream/` 下**（该目录被 `.gitignore` 忽略，体积大、按需重新获取）：
+
+```
+upstream/
+├── Install macOS 27 Golden Gate.app/     ← OTA 资产来源（17 GB）
+├── asahi-installer/                      ← 安装器源码
+└── m1n1/                                 ← m1n1 源码 + build/
+```
+
+| 需要 | 从哪来 | 放哪 |
+|---|---|---|
+| macOS 27 的 OTA 资产 | `Install macOS 27.app` 里的 `Contents/SharedSupport/SharedSupport.dmg`（其中那个 17 GB zip 就是 OTA 包） | `upstream/` |
+| Asahi 安装器源码 | `git clone https://gh-proxy.com/https://github.com/AsahiLinux/asahi-installer.git`（**只读用，不回馈**） | `upstream/asahi-installer/` |
+| m1n1 | 见 `docs/M1-RUNBOOK.md` §① | `upstream/m1n1/` |
+
+`tools/mk-stub.py` 按**脚本相对位置**推导这三个路径，所以换机器只要照上表摆好就行，不用改代码。
 
 ### 编译 m1n1 的坑（M5/macOS 27 实测）
 

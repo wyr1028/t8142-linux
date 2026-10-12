@@ -13,6 +13,11 @@ m1n1/
 linux/
 u-boot/
 
+# 上游原料 / 下载产物 —— 体积大,按需重新获取,不进版本库。
+# 里面放:m1n1/、asahi-installer/、Install macOS 27.app(建 stub 的原料)。
+# 获取方式见 docs/STUB-INSTALL.md 和 docs/M1-RUNBOOK.md。
+upstream/
+
 # 原始硬件数据 —— ⚠️ 含序列号/UUID/MAC,绝不提交
 *-adt.plist
 *.plist
